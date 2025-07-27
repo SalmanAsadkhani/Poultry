@@ -37,12 +37,12 @@ class GenerateDailyCycles extends Command
             $startDate = Verta::parse($cycle->start_date);
             $days = $startDate->diffDays(Verta::now()) + 1;
 
-//            $exists = $cycle->dailyReports()->where('date', $today)->exists();
-//
-//            if ($exists) {
-//                $this->info("⛔ گزارش امروز ($today) برای دوره {$cycle->id} قبلاً ثبت شده.");
-//                continue;
-//            }
+            $exists = $cycle->dailyReports()->where('date', $today)->exists();
+
+            if ($exists) {
+                $this->info("⛔ گزارش امروز ($today) برای دوره {$cycle->id} قبلاً ثبت شده.");
+                continue;
+            }
 
             $feed = $this->getFeedTypeForDay($days);
 

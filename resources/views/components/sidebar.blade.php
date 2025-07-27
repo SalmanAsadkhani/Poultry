@@ -27,7 +27,7 @@
                 </li>
 
                 <li>
-                    <a href="javascript:void(0);" style="background: #f8f9fa;">
+                    <a href="{{route('expense.index')}}" style="background: #f8f9fa;">
                         <i class="fab fa-layer-group"></i>
                         <span>هزینه ها</span>
                     </a>

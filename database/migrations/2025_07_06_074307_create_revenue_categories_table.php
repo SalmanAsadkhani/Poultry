@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('revenue_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('breeding_cycle_id')->constrained('breeding_cycles')->cascadeOnDelete();
             $table->bigInteger('status')->default(1);
             $table->timestamps();
         });

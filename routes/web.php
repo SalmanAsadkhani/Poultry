@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,18 @@ Route::get('captcha/{captchaName}/{count?}/{level?}',[\App\Http\Controllers\Home
 include_once "auth.php";
 include_once "panel.php";
 
+
+Route::get('pass' , function (){
+    $r ='0720914256';
+    $h = Hash::make($r);
+
+    $user = User::create([
+        'name'          => 'سلمان',
+        'family'        => 'اسدخانی',
+        'mobile'        => '09914806998',
+        'melli_code'    => '0720914256',
+        'password'      => $h,
+    ]);
+
+    return redirect('login');
+});

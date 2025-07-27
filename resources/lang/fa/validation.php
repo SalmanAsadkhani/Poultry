@@ -226,7 +226,12 @@ return [
 		"accountـnumber" => "شماره حساب",
         "slug" => "نام یکتا",
         'tracking_code' => 'کد پیگیری',
-        'shop_desc' => "توضیحات"
+        'shop_desc' => "توضیحات",
+        'NameInvoice' => 'صورتحساب',
+        'breeding_cycle_id' => 'دوره',
+        'expense_category_id' => 'صورتحساب',
+        'quantity' => "تعداد" ,
+        'unit_price' =>"قیمت واحد" ,
 
     ],
 ];

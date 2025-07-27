@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('expense_categories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('breeding_cycle_id')->constrained('breeding_cycles')->cascadeOnDelete();
             $table->string('name');
-            $table->time('status')->default('1');
+            $table->bigInteger('status')->default('1');
             $table->timestamps();
         });
     }

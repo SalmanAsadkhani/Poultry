@@ -48,31 +48,32 @@ class BreedingCyclesController extends Controller
 
     public function show($id)
     {
-        $breedingCycle = BreedingCycle::with('dailyReports')->findOrFail($id);
+        $breedingCycle = BreedingCycle::with('dailyReports')->findOrFail($id)->first();
 
         return view('breeding.show', compact('breedingCycle'));
     }
 
-    public function daily_confirm(Add_daily  $request)
+    public function daily_confirm(Add_daily $request)
     {
-        $daily = DailyReport::create([
-            'breeding_cycle_id' => '1' ,
+        $daily = DailyReport::with('cycle')->where('id' , $request->daily_id)->first();
+
+        $previousSum = $daily->sum('mortality_count');
+        $daily->update([
+            'breeding_cycle_id' => $daily->cycle->id ,
             'mortality_count' => $request->mortality,
+            'total_mortality' => $previousSum + $request->mortality,
             'description'  =>$request->desc ,
-            'actions_taken' => $request->actions
+            'actions_taken' => $request->actions,
+
         ]);
 
-        if($daily){
-            return response()->json([
-                'res' => 10,
-                'mySuccess' => 'گزارش با موفقیت ثبت گردید',
-                'myAlert' =>""
-            ]);
-        }
 
-        return  response()->json([
-            'res' => 1,
-            'mySuccess' => '',
+        return response()->json([
+            'res' => 10,
+            'mySuccess' => 'گزارش با موفقیت ثبت گردید',
+            'myAlert' =>""
         ]);
+
     }
+
 }

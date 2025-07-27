@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('date');
             $table->bigInteger('days_number');
             $table->bigInteger('mortality_count')->nullable();
+            $table->bigInteger('total_mortality')->nullable();
             $table->string('description')->nullable();
             $table->string('feed_type')->nullable();
             $table->string('actions_taken')->nullable();

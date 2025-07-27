@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DailyReport extends Model
 {
@@ -11,13 +12,14 @@ class DailyReport extends Model
         'date',
         'days_number',
         'mortality_count',
+        'total_mortality',
         'description',
         'feed_type',
         'actions_taken',
         'status',
     ];
 
-    public function cycle()
+    public function cycle(): BelongsTo
     {
         return $this->belongsTo(BreedingCycle::class, 'breeding_cycle_id');
     }

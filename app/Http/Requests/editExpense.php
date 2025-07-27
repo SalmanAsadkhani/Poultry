@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Add_daily extends FormRequest
+class editExpense extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +22,12 @@ class Add_daily extends FormRequest
     public function rules(): array
     {
         return [
-            'mortality' =>  'required|numeric|min:0',
-            'actions' =>   ['nullable', 'string'],
-            'desc' =>   ['nullable', 'string'],
-        ];
-
-    }
-
-    public function messages()
-    {
-        return [
-            'mortality.required' => 'تعداد تلفات رو وارد نمایید',
-            'mortality.numeric' => 'تعداد تلفات باید به صورت عددی وارد شود',
+            'breeding_cycle_id' => ['required', 'integer', 'exists:breeding_cycles,id'],
+            'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
+            'name' => ['required', 'string', 'min:2', 'max:255'],
+            'quantity' => ['required', 'integer', 'min:1'],
+            'unit_price' => ['nullable', 'integer', 'min:1'],
+            'description' => ['nullable', 'string', 'min:3', 'max:255'],
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BreedingCycle extends Model
 {
@@ -20,5 +21,10 @@ class BreedingCycle extends Model
     public function dailyReports()
     {
         return $this->hasMany(DailyReport::class);
+    }
+
+    public function expenseCategories(): HasMany
+    {
+        return $this->hasMany(ExpenseCategory::class);
     }
 }

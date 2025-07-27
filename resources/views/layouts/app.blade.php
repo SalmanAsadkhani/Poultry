@@ -16,8 +16,7 @@
     <link href="{{url('')}}/assets/css/style.css" rel="stylesheet" />
     <!-- Theme style. You can choose a theme from css/themes instead of get all themes -->
     <link href="{{url('')}}/assets/css/styles/all-themes.css" rel="stylesheet" />
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     @yield('css')
 </head>
 <body class="light rtl">
@@ -110,11 +109,42 @@
 <script src="{{url('')}}/assets/js/pages/charts/jquery-knob.js"></script>
 <script src="{{url('')}}/assets/js/pages/sparkline/sparkline-data.js"></script>
 <script src="{{url('')}}/assets/js/pages/medias/carousel.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
     $('body').on('keypress keyup focus blur','.money',function (event) {
         $(this).val(ToRial(fa2la($(this).val().replace(/[^0-9۰-۹\.]/g,''))));
     });
 </script>
+
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-bottom-left",
+        "preventDuplicates": false,
+        "showDuration": "200",
+        "hideDuration": "300",
+        "timeOut": "1500",
+        "extendedTimeOut": "500",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    function showToastSuccess(message) {
+        toastr.success(message, 'موفقیت');
+    }
+
+    function showToastError(message) {
+        toastr.error(message, 'خطا');
+    }
+
+</script>
+
+
 @yield('js')
 </body>
