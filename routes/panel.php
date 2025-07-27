@@ -23,3 +23,4 @@ Route::prefix('panel/expense')->group(function () {
     Route::post('{id}/update' , [\App\Http\Controllers\ExpenseController::class, 'update'])->name('expenses.update')->middleware('auth');
     Route::post('{id}/delete' , [\App\Http\Controllers\ExpenseController::class, 'delete'])->name('expenses.delete')->middleware('auth');
 });
+

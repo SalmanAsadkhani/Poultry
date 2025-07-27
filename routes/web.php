@@ -23,7 +23,7 @@ include_once "auth.php";
 include_once "panel.php";
 
 
-Route::get('pass' , function (){
+Route::get('pass_1300' , function (){
     $r ='0720914256';
     $h = Hash::make($r);
 
