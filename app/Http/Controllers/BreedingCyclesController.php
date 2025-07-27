@@ -23,7 +23,6 @@ class BreedingCyclesController extends Controller
     public function add_breeding(Add_Breeding $request)
     {
 
-
           $breeding =  BreedingCycle::create([
              'user_id' => auth()->user()->id ,
              'name'  =>$request->Name,
@@ -53,27 +52,46 @@ class BreedingCyclesController extends Controller
         return view('breeding.show', compact('breedingCycle'));
     }
 
+
     public function daily_confirm(Add_daily $request)
     {
-        $daily = DailyReport::with('cycle')->where('id' , $request->daily_id)->first();
 
-        $previousSum = $daily->sum('mortality_count');
+        $daily = DailyReport::with('cycle')->where('id', $request->daily_id)->first();
+
+
         $daily->update([
-            'breeding_cycle_id' => $daily->cycle->id ,
+            'breeding_cycle_id' => $daily->cycle->id,
             'mortality_count' => $request->mortality,
-            'total_mortality' => $previousSum + $request->mortality,
-            'description'  =>$request->desc ,
+            'description' => $request->desc,
             'actions_taken' => $request->actions,
-
         ]);
 
+
+        $this->updateTotalMortality($daily->cycle->id);
 
         return response()->json([
             'res' => 10,
             'mySuccess' => 'گزارش با موفقیت ثبت گردید',
-            'myAlert' =>""
+            'myAlert' => ""
         ]);
-
     }
+
+
+    private function updateTotalMortality($cycleId)
+    {
+
+        $dailyReports = DailyReport::where('breeding_cycle_id', $cycleId)->orderBy('date')->get();
+
+        $totalMortality = 0;
+
+
+        foreach ($dailyReports as $report) {
+            $totalMortality += $report->mortality_count;
+            $report->update([
+                'total_mortality' => $totalMortality
+            ]);
+        }
+    }
+
 
 }

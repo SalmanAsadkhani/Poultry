@@ -6,24 +6,24 @@
  *
  *  Structure (with shortcodes):
                  [1. Variables ]
-                 [2. Animations ]                   
-                 [3. Components ]                   
-                 [4. General Styles ]                   
-                 [5. Media Queries ]                   
-                 [6. Icons ]                   
-                 [7. Form Components ]                   
-                 [8. Left Sidebar ]                   
-                 [9. Navbar ]                   
-                 [10. Slider ]                   
-                 [11. Search Bar ]                   
-                 [12. Todo ]                   
-                 [13. Notice Board ]                   
-                 [14. Apps]                   
-                 [15. Pages ]                   
-                 [16. Pugins ]                   
-                 [17. Ecommerce ]                   
-                 [18. Material Components ]                   
-                 [19. Browser ]                              
+                 [2. Animations ]
+                 [3. Components ]
+                 [4. General Styles ]
+                 [5. Media Queries ]
+                 [6. Icons ]
+                 [7. Form Components ]
+                 [8. Left Sidebar ]
+                 [9. Navbar ]
+                 [10. Slider ]
+                 [11. Search Bar ]
+                 [12. Todo ]
+                 [13. Notice Board ]
+                 [14. Apps]
+                 [15. Pages ]
+                 [16. Pugins ]
+                 [17. Ecommerce ]
+                 [18. Material Components ]
+                 [19. Browser ]
 
 
 
@@ -43,6 +43,60 @@
  *  Author     : RedStar Template
  *  Description: This scss file for helper classes for reduce css effort
  */
+
+/*
+ * استایل‌های نمایش جدولی به صورت کارت در موبایل
+*/
+.accordion .card-header {
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+
+.accordion .card-header:hover {
+    background-color: #e9ecef;
+}
+
+@media screen and (max-width: 768px) {
+    /* کلاس هدفی که به جدول دادیم */
+    .table-mobile-cards thead {
+        display: none; /* سربرگ اصلی جدول مخفی می‌شود */
+    }
+
+    .table-mobile-cards tr {
+        display: block; /* هر سطر مثل یک بلاک جدا نمایش داده می‌شود */
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: .25rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .table-mobile-cards td {
+        display: block; /* هر سلول زیر هم قرار می‌گیرد */
+        text-align: right; /* متن‌ها راست‌چین می‌شوند */
+        position: relative;
+        padding-right: 50% !important; /* فضای کافی برای نمایش لیبل */
+        padding-top: .75rem;
+        padding-bottom: .75rem;
+        border: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    .table-mobile-cards td:last-child {
+        border-bottom: none; /* خط جداکننده از آخرین سلول حذف می‌شود */
+    }
+
+    /* این بخش لیبل‌ها را از اتریبیوت data-label خوانده و نمایش می‌دهد */
+    .table-mobile-cards td::before {
+        content: attr(data-label); /* محتوای دیتا لیبل را می‌خواند */
+        position: absolute;
+        right: 1rem;
+        font-weight: bold;
+        width: 45%;
+        text-align: right;
+    }
+}
+
+
 .m-l--125 {
   margin-left: -125px; }
 
@@ -2763,12 +2817,12 @@
             9. PRELOADER
             10. ION RANGE SLIDER
             11. RIGHT SIDEBAR
-        
+
  */
 /***********************************************************************
 
 						[1. BUTTONS ]
-						
+
 ***********************************************************************/
 .demo-button-sizes .btn {
   margin-bottom: 5px; }
@@ -2824,7 +2878,7 @@
 /***********************************************************************
 
 						[2. CHECKBOX & RADIO ]
-						
+
 ***********************************************************************/
 .demo-checkbox label,
 .demo-radio-button label {
@@ -2833,7 +2887,7 @@
 /***********************************************************************
 
 						[3. JQUERY KNOB-CHART ]
-						
+
 ***********************************************************************/
 .demo-knob-chart div {
   margin-left: 15px; }
@@ -2841,7 +2895,7 @@
 /***********************************************************************
 
 						[4. SWITCH ]
-						
+
 ***********************************************************************/
 .demo-switch .switch {
   display: inline-block;
@@ -2854,7 +2908,7 @@
 /***********************************************************************
 
 						[5. COLOR BOX ]
-						
+
 ***********************************************************************/
 .demo-color-box {
   padding: 15px 0;
@@ -2874,7 +2928,7 @@
 /***********************************************************************
 
 						[6. IMAGES ]
-						
+
 ***********************************************************************/
 .demo-image-copyright {
   text-align: left;
@@ -2889,7 +2943,7 @@
 /***********************************************************************
 
 						[7. TAGS INPUT ]
-						
+
 ***********************************************************************/
 .demo-tagsinput-area {
   margin-bottom: 0px !important; }
@@ -2899,7 +2953,7 @@
 /***********************************************************************
 
 						[8 .GOOGLE MATERIAL DESIGN ICON ]
-						
+
 ***********************************************************************/
 .demo-icon-container .demo-google-material-icon {
   margin-bottom: 5px;
@@ -2914,7 +2968,7 @@
 /***********************************************************************
 
 						[9. PRELOADERS ]
-						
+
 ***********************************************************************/
 .demo-preloader .preloader {
   margin-left: 10px; }
@@ -2922,7 +2976,7 @@
 /***********************************************************************
 
 						[10. ION RANGE SLIDER ]
-						
+
 ***********************************************************************/
 .irs-demo {
   margin-bottom: 40px; }
@@ -2932,7 +2986,7 @@
 /***********************************************************************
 
 						[11. RIGHT SIDEBAR ]
-						
+
 ***********************************************************************/
 .right-sidebar .nav-tabs + .tab-content {
   padding: 0; }
@@ -12573,10 +12627,10 @@ nav.navbar {
   display: table;
   clear: both; }
 
-/* -------------------------------- 
-    
-    Main components 
-    
+/* --------------------------------
+
+    Main components
+
     -------------------------------- */
 header {
   height: 200px;

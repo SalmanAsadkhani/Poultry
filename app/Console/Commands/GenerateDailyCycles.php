@@ -70,8 +70,7 @@ class GenerateDailyCycles extends Command
             }
         }
     }
-        }
-    }
+
 
     private function getFeedTypeForDay(int $day): string
     {
