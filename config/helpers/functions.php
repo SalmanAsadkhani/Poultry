@@ -169,27 +169,27 @@ if (!function_exists('isLogin')) {
     }
 }
 
-function change_birth($date,$seprator=''){
-    if(is_numeric($date) && strlen($date)==8){
-        $date = [substr($date,0,4),substr($date,4,2),substr($date,6,2)];
-        if($seprator == '')
-            return $date;
-        return $date[0].$seprator.$date[1].$seprator.$date[2];
+if (!function_exists('change_birth')) {
+    function change_birth($date, $seprator = '')
+    {
+        if (is_numeric($date) && strlen($date) == 8) {
+            $date = [substr($date, 0, 4), substr($date, 4, 2), substr($date, 6, 2)];
+            if ($seprator === '') {
+                return $date;
+            }
+            return implode($seprator, $date);
+        }
 
+        if ($seprator === '') {
+            return ['', '', ''];
+        }
+
+        return '-';
     }
-    if($seprator == '')
-        return ['','',''];
-    return '-';
 }
 
-function get_barcode($melli){
-    include_once ROOT.'systems/app/Helpers/barcode/get.php';
-    return make_barcode($melli);
-    if(!is_file(ROOT.'barcodes/'.$melli.'.jpg')) {
-        make_barcode($melli);
-    }
-    return url('barcodes/'.$melli.'.jpg');
-}
+
+
 
 function my_dd($data)
 {
