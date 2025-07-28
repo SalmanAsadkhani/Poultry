@@ -67,17 +67,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0);">
-                                        <i class="material-icons">feedback</i>بازخورد
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <i class="material-icons">help</i>راهنما
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
+                                    <a href="{{route('logout')}}">
                                         <i class="material-icons">power_settings_new</i>خروج
                                     </a>
                                 </li>
@@ -123,7 +113,7 @@
         "debug": false,
         "newestOnTop": true,
         "progressBar": true,
-        "positionClass": "toast-bottom-left",
+        "positionClass": "toast-top-left",
         "preventDuplicates": false,
         "showDuration": "200",
         "hideDuration": "300",

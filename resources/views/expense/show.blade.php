@@ -193,37 +193,6 @@
         <div class="container-fluid">
 
 
-            <div class="container my-5">
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card shadow-sm border-0 h-100 text-center">
-                            <div class="card-body">
-                                <h6 class="text-muted mb-4">مقدار کل دان مصرفی  <small>(کیلوگرم) </small></h6>
-                                <h4 class="fw-bold text-danger">{{sep($total_feed)}}</h4>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card shadow-sm border-0 h-100 text-center">
-                            <div class="card-body">
-                                <h6 class="text-muted mb-4">میانگین قیمت دان <small>(تومان) </small></h6>
-                                <h4 class="fw-bold text-primary">{{sep($average_price)}}</h4>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card shadow-sm border-0 h-100 text-center">
-                            <div class="card-body">
-                                <h6 class="text-muted mb-4"> جمع کل قیمت دان <small>(تومان) </small></h6>
-                                <h4 class="fw-bold text-warning">{{sep($total_price)}}</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">

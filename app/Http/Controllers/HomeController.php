@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
+use App\Models\BreedingCycle;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,7 +14,8 @@ class HomeController extends Controller
 
     public function index()
     {
-
-        return view('panel.dashboard');
+//        return view('panel.dashboard');
+        $breedingCycles = BreedingCycle::all();
+        return view('breeding.index' , compact('breedingCycles'));
     }
 }

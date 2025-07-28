@@ -6,25 +6,37 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.save-report').on('click', function () {
+            $('.save-report').on('click', function (e) {
+                e.preventDefault();
 
                 const button = $(this);
                 const id = button.data('id');
-                const row = button.closest('tr');
+
+                let mortality, actions, desc;
+
+
+                if (button.closest('tr').length) {
+                    const row = button.closest('tr');
+                    mortality = row.find(`input[name="mortality[${id}]"]`).val();
+                    actions = row.find(`input[name="actions[${id}]"]`).val();
+                    desc = row.find(`input[name="desc[${id}]"]`).val();
+                } else {
+                    const card = button.closest('.card-body');
+                    mortality = card.find(`input[name="mortality_mobile[${id}]"]`).val();
+                    actions = card.find(`input[name="actions_mobile[${id}]"]`).val();
+                    desc = card.find(`input[name="desc_mobile[${id}]"]`).val();
+                }
 
 
                 const formData = new FormData();
-                formData.append('mortality', row.find(`input[name="mortality[${id}]"]`).val());
-                formData.append('actions', row.find(`input[name="actions[${id}]"]`).val());
-                formData.append('desc', row.find(`input[name="desc[${id}]"]`).val());
-                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content); // ارسال توکن CSRF
-                formData.append('daily_id' , id);
-
-
+                formData.append('mortality', mortality);
+                formData.append('actions', actions);
+                formData.append('desc', desc);
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('daily_id', id);
 
                 let url = "{{ route('daily.confirm', ':id') }}";
                 url = url.replace(':id', id);
-
 
                 $.ajax({
                     url: url,
@@ -37,32 +49,30 @@
                     },
                     success: function (result) {
                         if (result.res === 10) {
-                            toastr.success( result.mySuccess);
-                            setTimeout(()=>{
+                            toastr.success(result.mySuccess);
+                            setTimeout(() => {
                                 location.reload();
-                            } , 1500)
-                            form.reset();
-                            errorBox.style.display = 'none';
-
+                            }, 1500);
                         } else {
-                            errorBox.innerHTML = `<ul><li>${result.myAlert}</li></ul>`;
-                            errorBox.style.display = 'block';
-
                             toastr.error(result.myAlert);
-
                         }
                     },
                     error: function (xhr) {
+
                         let err = 'خطایی در ارسال داده‌ها رخ داد';
+
                         if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+
                             err = Object.values(xhr.responseJSON.errors).join(' - ');
+
                         } else if (xhr.responseJSON?.myAlert) {
+
                             err = xhr.responseJSON.myAlert;
+
                         }
                         toastr.error(err);
                     }
                 });
-
             });
         });
     </script>
@@ -73,12 +83,35 @@
     <section class="content">
         <div class="container-fluid">
 
+            <div class="container my-5">
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card shadow-sm border-0 h-100 text-center">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-4"> سن جوجه </h6>
+                                <h4 class="fw-bold text-danger">{{$chickAge}} روزه</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card shadow-sm border-0 h-100 text-center">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-4"> جمع تلفات کل</h6>
+                                <h4 class="fw-bold text-primary">{{$total_mortality}} تلفات</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="card">
                         <div class="body">
                             <x-responsive-display>
-                                {{-- این اسلات، ظاهر دسکتاپ را مشخص می‌کند --}}
                                 <x-slot:desktop>
                                     <div class="table-responsive">
                                         <table id="tableExport" class="display table table-hover table-checkable order-column width-per-100">
@@ -126,25 +159,31 @@
 
                                                 <div class="card-body" x-show="open" x-transition>
                                                     <div class="form-group">
-                                                        <label>تلفات:</label>
+                                                        <label class="bold text-danger ">تلفات:</label>
                                                         <input class="form-control" name="mortality_mobile[{{ $report->id }}]" value="{{ $report->mortality_count }}">
                                                     </div>
-                                                    <p>جمع تلفات: {{ $report->total_mortality }}</p>
+
+                                                    <div class="bold text-danger mb-5">جمع تلفات:
+                                                        <span class="text-dark">{{ $report->total_mortality }}</span>
+                                                    </div>
+
                                                     <div class="form-group">
-                                                        <label>داروی مصرفی:</label>
+                                                        <label class="bold text-danger">داروی مصرفی:</label>
                                                         <input class="form-control" name="actions_mobile[{{ $report->id }}]" value="{{ $report->actions_taken }}">
                                                     </div>
-                                                    <p>دان: {{ $report->feed_type }}</p>
+
+                                                    <div class="bold text-danger mb-5">دان:
+                                                        <span class="text-dark">{{ $report->feed_type }}</span>
+                                                    </div>
+
                                                     <div class="form-group">
-                                                        <label>ملاحظات:</label>
+                                                        <label class="bold text-danger">ملاحظات:</label>
                                                         <input class="form-control" name="desc_mobile[{{ $report->id }}]" value="{{ $report->description }}">
                                                     </div>
                                                     <button class="btn btn-primary mt-2 save-report" data-id="{{ $report->id }}">ثبت</button>
                                                 </div>
                                             </div>
                                         @endforeach
-
-
 
                                 </x-slot:mobile>
 
