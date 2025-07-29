@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Add_daily extends FormRequest
+class StoreDaily extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,6 +23,7 @@ class Add_daily extends FormRequest
     {
         return [
             'mortality' =>  'required|numeric|min:0',
+            'feed' =>  'required|numeric|min:1',
             'actions' =>   ['nullable', 'string'],
             'desc' =>   ['nullable', 'string'],
         ];
@@ -34,6 +35,8 @@ class Add_daily extends FormRequest
         return [
             'mortality.required' => 'تعداد تلفات رو وارد نمایید',
             'mortality.numeric' => 'تعداد تلفات باید به صورت عددی وارد شود',
+            'feed.required' => 'تعداد دان مصرفی رو وارد نمایید',
+            'feed.numeric' => 'تعداد دان مصرفی باید به صورت عددی وارد شود',
         ];
     }
 }

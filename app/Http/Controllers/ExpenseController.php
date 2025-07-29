@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\editExpense;
+use App\Http\Requests\updateExpense;
 use App\Http\Requests\StoreExpense;
 use App\Models\BreedingCycle;
 use App\Models\Expense;
@@ -66,7 +66,7 @@ class ExpenseController extends Controller
         ]);
     }
 
-    public function update(editExpense $request , $id ): JsonResponse
+    public function update(updateExpense $request , $id ): JsonResponse
     {
         $expense = Expense::where('id', $id)->first();
 

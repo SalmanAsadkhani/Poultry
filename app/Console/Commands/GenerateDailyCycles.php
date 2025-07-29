@@ -30,19 +30,16 @@ class GenerateDailyCycles extends Command
     public function handle()
     {
         $today = Verta::now()->format('Y/m/d');
-        $yesterday = Verta::now()->subDay()->format('Y/m/d');
-
 
         $activeCycles = BreedingCycle::where('status', 1)->whereNull('end_date')->get();
 
         foreach ($activeCycles as $cycle) {
-            $startDate = Verta::parse($cycle->start_date);
-            $firstReportDate = $startDate->addDay();
-            $daysPassed = $firstReportDate->diffDays(Verta::now()) + 1;
+            $startDate = Verta::parse($cycle->start_date)->addDays(1);
+            $daysPassed = $startDate->diffDays(Verta::now()) + 1;
 
             for ($day = 1; $day <= $daysPassed; $day++) {
 
-                $currentDate = $firstReportDate->addDays($day - 1)->format('Y/m/d');
+                $currentDate = $startDate->addDays($day - 1)->format('Y/m/d');
 
 
                 if ($currentDate == $today) {

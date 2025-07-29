@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Add_Breeding;
-use App\Http\Requests\Add_daily;
+use App\Http\Requests\StoreBreeding;
+use App\Http\Requests\StoreDaily;
 use App\Models\BreedingCycle;
 use App\Models\DailyReport;
-use Carbon\Carbon;
 use Hekmatinasser\Verta\Facades\Verta;
 
 class BreedingCyclesController extends Controller
@@ -21,7 +20,7 @@ class BreedingCyclesController extends Controller
 
     }
 
-    public function add_breeding(Add_Breeding $request)
+    public function add_breeding(StoreBreeding $request)
     {
 
           $breeding =  BreedingCycle::create([
@@ -50,25 +49,26 @@ class BreedingCyclesController extends Controller
     {
         $breedingCycle = BreedingCycle::with('dailyReports')->findOrFail($id)->first();
         $total_mortality = $breedingCycle->dailyReports()->sum('mortality_count');
-
-        $today = Verta::now()->format('Y/m/d');
-        $startDate = Verta::parse($breedingCycle->start_date);
-        $firstReportDate = $startDate->addDay();
-        $chickAge = $firstReportDate->diffDays(Verta::now()) + 1;
+        $total_feed = $breedingCycle->dailyReports()->sum('feed_count');
 
 
+        $startDate = Verta::parse($breedingCycle->start_date)->addDays(1);
 
-        return view('breeding.show', compact('breedingCycle' , 'total_mortality' , 'chickAge'));
+        $chickAge = $startDate->diffDays(Verta::now()) + 1;
+
+
+        return view('breeding.show', compact('breedingCycle' , 'total_mortality' , 'chickAge' , 'total_feed'));
     }
 
 
-    public function daily_confirm(Add_daily $request)
+    public function daily_confirm(StoreDaily $request)
     {
         $daily = DailyReport::with('cycle')->where('id', $request->daily_id)->first();
 
         $daily->update([
             'breeding_cycle_id' => $daily->cycle->id,
             'mortality_count' =>fa2la( $request->mortality),
+            'feed_count' =>fa2la( $request->feed),
             'description' => $request->desc,
             'actions_taken' => $request->actions,
         ]);

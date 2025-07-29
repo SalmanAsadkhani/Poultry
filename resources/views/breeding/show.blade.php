@@ -4,6 +4,7 @@
 
 @section('js')
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <script>
         $(document).ready(function() {
             $('.save-report').on('click', function (e) {
@@ -12,17 +13,19 @@
                 const button = $(this);
                 const id = button.data('id');
 
-                let mortality, actions, desc;
+                let mortality, actions, desc , feed;
 
 
                 if (button.closest('tr').length) {
                     const row = button.closest('tr');
                     mortality = row.find(`input[name="mortality[${id}]"]`).val();
+                    feed = row.find(`input[name="feed[${id}]"]`).val();
                     actions = row.find(`input[name="actions[${id}]"]`).val();
                     desc = row.find(`input[name="desc[${id}]"]`).val();
                 } else {
                     const card = button.closest('.card-body');
                     mortality = card.find(`input[name="mortality_mobile[${id}]"]`).val();
+                    feed = card.find(`input[name="feed_mobile[${id}]"]`).val();
                     actions = card.find(`input[name="actions_mobile[${id}]"]`).val();
                     desc = card.find(`input[name="desc_mobile[${id}]"]`).val();
                 }
@@ -30,6 +33,7 @@
 
                 const formData = new FormData();
                 formData.append('mortality', mortality);
+                formData.append('feed', feed);
                 formData.append('actions', actions);
                 formData.append('desc', desc);
                 formData.append('_token', '{{ csrf_token() }}');
@@ -76,6 +80,7 @@
             });
         });
     </script>
+
 @endsection
 
 @section('main')
@@ -84,8 +89,8 @@
         <div class="container-fluid">
 
             <div class="container my-5">
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6">
+                <div class="d-flex flex-wrap align-items-center g-4">
+                    <div class="col-lg-4 col-md-3">
                         <div class="card shadow-sm border-0 h-100 text-center">
                             <div class="card-body">
                                 <h6 class="text-muted mb-4"> سن جوجه </h6>
@@ -94,11 +99,20 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-3">
                         <div class="card shadow-sm border-0 h-100 text-center">
                             <div class="card-body">
                                 <h6 class="text-muted mb-4"> جمع تلفات کل</h6>
                                 <h4 class="fw-bold text-primary">{{$total_mortality}} تلفات</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-3">
+                        <div class="card shadow-sm border-0 h-100 text-center">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-4">تعداد کل دان مصرفی</h6>
+                                <h4 class="fw-bold text-price">  {{$total_feed}}کیسه</h4>
                             </div>
                         </div>
                     </div>
@@ -123,6 +137,7 @@
                                                 <th class="center">جمع تلفات</th>
                                                 <th class="center">داروی مصرفی و واکسن</th>
                                                 <th class="center">دان</th>
+                                                <th class="center">تعداد دان مصرفی <small>(کیسه)</small></th>
                                                 <th class="center">ملاحضات</th>
                                                 <th class="center">جزییات</th>
                                             </tr>
@@ -131,12 +146,21 @@
                                             @foreach($breedingCycle->dailyReports as $report)
                                                 <tr>
                                                     <td>{{ $report->days_number }}</td>
+
                                                     <td>{{ $report->date }}</td>
+
                                                     <td><input name="mortality[{{ $report->id }}]" value="{{ $report->mortality_count }}"></td>
+
                                                     <td>{{ $report->total_mortality}}</td>
+
                                                     <td><input name="actions[{{ $report->id }}]" value="{{ $report->actions_taken }}"></td>
+
                                                     <td>{{ $report->feed_type }}</td>
+
+                                                    <td><input name="feed[{{ $report->id }}]" value="{{ $report->feed_count }}"></td>
+
                                                     <td><input name="desc[{{ $report->id }}]" value="{{ $report->description }}"></td>
+
                                                     <td><button class="btn btn-primary save-report" data-id="{{ $report->id }}">ثبت</button></td>
                                                 </tr>
                                             @endforeach
@@ -174,6 +198,10 @@
 
                                                     <div class="bold text-danger mb-5">دان:
                                                         <span class="text-dark">{{ $report->feed_type }}</span>
+                                                    </div>
+
+                                                    <div class="text-danger mt-2 mb-3 ">  تعداد دان مصرفی  <small class="text-dark">(کیسه)</small>:
+                                                        <input class="form-control" name="feed_mobile[{{ $report->id }}]" value="{{ $report->feed_count }}">
                                                     </div>
 
                                                     <div class="form-group">
