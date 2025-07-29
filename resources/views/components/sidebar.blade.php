@@ -6,8 +6,9 @@
             <ul class="list">
                 <li class="sidebar-user-panel active">
                     <div class="user-panel">
-                        <div class=" image">
+                        <div class="image align-items-center align-content-center">
                             <img src="{{url('')}}/assets/images/a-cartoon-chicken.jpg" class="img-circle user-img-circle" alt="User Image" />
+                            <button id="installButton" style="display: none;" class="btn btn-sm btn-primary mt-3" >نصب اپلیکیشن</button>
                         </div>
                     </div>
                 </li>
@@ -15,6 +16,7 @@
                     <a href="{{route('home')}}" class="toggled waves-effect waves-block"  >
                         <i class="fas fa-tachometer-alt"></i>
                         <span>داشبورد</span>
+
                     </a>
                 </li>
 

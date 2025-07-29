@@ -1,6 +1,6 @@
 {
-    "name": "FlockFlow",
-    "short_name": "FlockFlow",
+    "name": "Poultry",
+    "short_name": "Poultry",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#f8f9fa",
@@ -8,16 +8,14 @@
     "description": "Smart management for your poultry flock. Track mortality, feed, and growth cycles effortlessly.",
     "icons": [
         {
-            "src": "/assets/images/logo.png",
+            "src": "assets/images/logo-192.png",
             "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
+            "type": "image/png"
         },
         {
-            "src": "/assets/images/logo.png",
+            "src": "assets/images/logo-512.png",
             "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
+            "type": "image/png"
         }
     ]
 }

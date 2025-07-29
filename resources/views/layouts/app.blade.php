@@ -25,7 +25,6 @@
     @yield('css')
 </head>
 <body class="light rtl">
-
 <!-- Page Loader -->
 <div class="page-loader-wrapper">
     <div class="loader">
@@ -35,24 +34,18 @@
         <p>لطفا صبر کنید...</p>
     </div>
 </div>
-<!-- #END# Page Loader -->
-<!-- Overlay For Sidebars -->
+
 <div class="overlay"></div>
-<!-- #END# Overlay For Sidebars -->
-<!-- Top Bar -->
 <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
             <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand" >
+            <a class="navbar-brand " >
                 <img src="{{url('')}}/assets/images/logo.png" alt="" />
-                <span class="logo-name">لوراکس</span>
-
-                <button id="installButton" style="display: none;" class="btn btn-success">نصب اپلیکیشن</button>
+                    <span class="logo-name">لوراکس</span>
             </a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
-
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown user_profile">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
