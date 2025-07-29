@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آفلاین هستید</title>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8f9fa;
+            color: #495057;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #343a40;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .reload-button {
+            display: inline-block;
+            background-color: #28a745; /* رنگ سبز تم برنامه */
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .reload-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 12A10 10 0 0 0 12 2v2a8 8 0 0 1 8 8h2zM12 22a10 10 0 0 0 10-10h-2a8 8 0 0 1-8 8v2zM2 12H0a10 10 0 0 0 10 10v-2a8 8 0 0 1-8-8zM12 2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8V2z"></path>
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+    </svg>
+
+    <h1>اتصال برقرار نیست</h1>
+    <p>
+        به نظر می‌رسد به اینترنت متصل نیستید. لطفاً اتصال خود را بررسی کرده و دوباره تلاش کنید.
+    </p>
+    <button class="reload-button" onclick="window.location.reload();">تلاش مجدد</button>
+</div>
+</body>
+</html>

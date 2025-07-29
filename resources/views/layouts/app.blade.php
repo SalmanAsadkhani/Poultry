@@ -17,9 +17,15 @@
     <!-- Theme style. You can choose a theme from css/themes instead of get all themes -->
     <link href="{{url('')}}/assets/css/styles/all-themes.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <link rel="manifest" href="{{url('')}}/manifest.json">
+
+    <meta name="theme-color" content="#4A90E2"/>
+
     @yield('css')
 </head>
 <body class="light rtl">
+
 <!-- Page Loader -->
 <div class="page-loader-wrapper">
     <div class="loader">
@@ -37,27 +43,22 @@
 <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"
-               aria-expanded="false"></a>
             <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" >
                 <img src="{{url('')}}/assets/images/logo.png" alt="" />
                 <span class="logo-name">لوراکس</span>
+
+                <button id="installButton" style="display: none;" class="btn btn-success">نصب اپلیکیشن</button>
             </a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="pull-right">
-                <li>
-                    <a href="javascript:void(0);" class="sidemenu-collapse">
-                        <i class="material-icons">reorder</i>
-                    </a>
-                </li>
-            </ul>
+
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown user_profile">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                         <img src="{{url('')}}/assets/users/male-icon.jpg" width="32" height="32" alt="User">
                     </a>
+
                     <ul class="dropdown-menu pullDown">
                         <li class="body">
                             <ul class="user_dw_menu">
@@ -75,12 +76,7 @@
                         </li>
                     </ul>
                 </li>
-                <!-- #END# Tasks -->
-                <li class="pull-right">
-                    <a href="javascript:void(0);" class="js-right-sidebar" data-close="true">
-                        <i class="fas fa-cog"></i>
-                    </a>
-                </li>
+
             </ul>
         </div>
     </div>
@@ -135,6 +131,54 @@
 
 </script>
 
+
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/{{url('')}}/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered successfully: ', registration);
+                })
+                .catch(err => {
+                    console.log('Service Worker registration failed: ', err);
+                });
+        });
+    }
+</script>
+
+<script>
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+
+
+        const installButton = document.getElementById('installButton');
+        if (installButton) {
+            installButton.style.display = 'block';
+        }
+    });
+
+    const installButton = document.getElementById('installButton');
+    if (installButton) {
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+
+                deferredPrompt.prompt();
+
+
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+
+                deferredPrompt = null;
+
+                installButton.style.display = 'none';
+            }
+        });
+    }
+</script>
 
 @yield('js')
 </body>
