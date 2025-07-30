@@ -199,7 +199,7 @@
 
                                                     <td>{{ $report->days_number }}</td>
 
-                                                    <td>{{  verta($report->date)->format('Y/m/d')}}</td>
+                                                    <td>{{ $report->daily_date}}</td>
 
                                                     <td><input name="mortality[{{ $report->id }}]" value="{{ $report->mortality_count }}"></td>
 
@@ -229,7 +229,7 @@
                                              x-data="{ open: {{ $loop->last ? 'true' : 'false' }} }">
 
                                                 <div class="card-header d-flex justify-content-between align-items-center" @click="open = !open" style="cursor: pointer;">
-                                                    <strong>روز {{ $report->days_number }}</strong> - <span>{{ verta($report->date)->format('Y/m/d') }}</span>
+                                                    <strong>روز {{ $report->days_number }}</strong> - <span>{{ $report->daily_date }}</span>
                                                     <span x-show="!open">▼</span>
                                                     <span x-show="open">▲</span>
                                                 </div>
