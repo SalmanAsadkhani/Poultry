@@ -47,17 +47,21 @@ class BreedingCyclesController extends Controller
 
     public function show($id)
     {
-        $breedingCycle = BreedingCycle::with('dailyReports')->findOrFail($id)->first();
-        $total_mortality = $breedingCycle->dailyReports()->sum('mortality_count');
-        $total_feed = $breedingCycle->dailyReports()->sum('feed_count');
+        $breedingCycle = BreedingCycle::with('dailyReports')->where('id' , $id)->first();
 
+        $total_mortality = $breedingCycle->dailyReports()->sum('mortality_count');
+
+        $total_feed = $breedingCycle->dailyReports()->sum('feed_count');
 
         $startDate = Verta::parse($breedingCycle->start_date)->addDays(1);
 
         $chickAge = $startDate->diffDays(Verta::now()) + 1;
 
+        $today = Verta::now()->subDay()->format('Y/m/d');
 
-        return view('breeding.show', compact('breedingCycle' , 'total_mortality' , 'chickAge' , 'total_feed'));
+
+
+        return view('breeding.show', compact('breedingCycle' , 'total_mortality' , 'chickAge' , 'total_feed' , 'today'));
     }
 
 
@@ -83,7 +87,6 @@ class BreedingCyclesController extends Controller
         ]);
     }
 
-
     private function updateTotalMortality(int $cycleId): void
     {
         $reports = DailyReport::where('breeding_cycle_id', $cycleId)->orderBy('date', 'asc')->get();
@@ -106,6 +109,10 @@ class BreedingCyclesController extends Controller
             DailyReport::query()->upsert($updates, ['id'], ['total_mortality']);
         }
     }
+
+
+
+
 
 
 }

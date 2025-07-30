@@ -22,7 +22,10 @@
 
     <meta name="theme-color" content="#4A90E2"/>
 
-    @yield('css')
+    <style>
+        @yield('css')
+    </style>
+
 </head>
 <body class="light rtl">
 <!-- Page Loader -->
@@ -90,11 +93,7 @@
 <script src="{{url('')}}/assets/js/pages/medias/carousel.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script>
-    $('body').on('keypress keyup focus blur','.money',function (event) {
-        $(this).val(ToRial(fa2la($(this).val().replace(/[^0-9۰-۹\.]/g,''))));
-    });
-</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <script>
     toastr.options = {
@@ -138,9 +137,7 @@
                 });
         });
     }
-</script>
 
-<script>
     let deferredPrompt;
 
     window.addEventListener('beforeinstallprompt', (e) => {

@@ -3,7 +3,7 @@
 @section('title','دوره ها')
 
 @section('js')
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 
     <script>
         $(document).ready(function() {
@@ -81,6 +81,53 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const scrollToLastButton = document.getElementById('scrollToTodayBtn');
+
+            // تمام عناصری که این کلاس را دارند، پیدا کن
+            const lastReportElements = document.querySelectorAll('.last-report-row');
+            let visibleLastReportRow = null;
+
+            // در میان آنها بگرد و عنصری که قابل مشاهده است را پیدا کن
+            for (const element of lastReportElements) {
+                // el.offsetParent !== null یک راه خوب برای چک کردن قابل مشاهده بودن است
+                if (element.offsetParent !== null) {
+                    visibleLastReportRow = element;
+                    break;
+                }
+            }
+
+            if (!visibleLastReportRow) {
+                scrollToLastButton.style.display = 'none';
+                return;
+            }
+
+            scrollToLastButton.addEventListener('click', function () {
+                visibleLastReportRow.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+
+                visibleLastReportRow.classList.add('highlight-row');
+                setTimeout(() => {
+                    visibleLastReportRow.classList.remove('highlight-row');
+                }, 2000);
+            });
+        });
+    </script>
+
+@endsection
+
+@section('css')
+    @keyframes highlight-fade {
+    from { background-color: #d1ecf1; }
+    to { background-color: transparent; }
+    }
+
+    .highlight-row {
+    animation: highlight-fade 2s ease-out;
+    }
 @endsection
 
 @section('main')
@@ -125,6 +172,9 @@
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="card">
                         <div class="body">
+                            <div class="text-right mb-3">
+                                <button id="scrollToTodayBtn" class="btn btn-sm btn-info mb-3">پرش به گزارش امروز</button>
+                            </div>
                             <x-responsive-display>
                                 <x-slot:desktop>
                                     <div class="table-responsive">
@@ -144,10 +194,12 @@
                                             </thead>
                                             <tbody>
                                             @foreach($breedingCycle->dailyReports as $report)
-                                                <tr>
+                                                <tr  @if($loop->last)  class="last-report-row" @endif>
+
+
                                                     <td>{{ $report->days_number }}</td>
 
-                                                    <td>{{ $report->date }}</td>
+                                                    <td>{{ $report->daily_date}}</td>
 
                                                     <td><input name="mortality[{{ $report->id }}]" value="{{ $report->mortality_count }}"></td>
 
@@ -173,9 +225,11 @@
                                 <x-slot:mobile>
 
                                         @foreach($breedingCycle->dailyReports as $report)
-                                            <div class="card mb-3" x-data="{ open: false }">
+                                        <div @class(['card', 'mb-3', 'last-report-row' => $loop->last])
+                                             x-data="{ open: {{ $loop->last ? 'true' : 'false' }} }">
+
                                                 <div class="card-header d-flex justify-content-between align-items-center" @click="open = !open" style="cursor: pointer;">
-                                                    <strong>روز {{ $report->days_number }}</strong> - <span>{{ $report->date }}</span>
+                                                    <strong>روز {{ $report->days_number }}</strong> - <span>{{ $report->daily_date }}</span>
                                                     <span x-show="!open">▼</span>
                                                     <span x-show="open">▲</span>
                                                 </div>

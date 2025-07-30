@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Hekmatinasser\Verta\Facades\Verta;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,6 +26,12 @@ class DailyReport extends Model
         return $this->belongsTo(BreedingCycle::class, 'breeding_cycle_id');
     }
 
+
+    public function getDailyDateAttribute()
+    {
+        $value = $this->attributes['date'];
+        return \verta($value)->format('Y/m/d');
+    }
 
 
 }

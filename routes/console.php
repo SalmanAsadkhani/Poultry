@@ -9,5 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 
-Schedule::command('app:generate-daily-cycles')->dailyAt('00:05');
-//Schedule::command('app:generate-daily-cycles')->everyThirtySeconds();
+//Schedule::command('app:generate-daily-cycles')->dailyAt('00:05');
+Schedule::command('app:generate-daily-cycles')->everyThirtySeconds();

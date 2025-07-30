@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('breeding_cycle_id')->constrained('breeding_cycles');
+            $table->foreignId('breeding_cycle_id')->constrained('breeding_cycles')->onDelete('cascade')->onUpdate('cascade');
             $table->date('date');
             $table->bigInteger('days_number');
             $table->bigInteger('mortality_count')->nullable();

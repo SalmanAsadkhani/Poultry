@@ -27,46 +27,45 @@ class GenerateDailyCycles extends Command
      */
 
 
+//     app/Console/Commands/GenerateDailyCycles.php
+
     public function handle()
     {
-        $today = Verta::now()->format('Y/m/d');
-
         $activeCycles = BreedingCycle::where('status', 1)->whereNull('end_date')->get();
 
+        $yesterday = Verta::now()->subDay();
+
+        $yesterdayString = $yesterday->format('Y/m/d');
+
+        $yesterdayDate = $yesterday->DateTime()->format('Y-m-d');
+
         foreach ($activeCycles as $cycle) {
-            $startDate = Verta::parse($cycle->start_date)->addDays(1);
-            $daysPassed = $startDate->diffDays(Verta::now()) + 1;
-
-            for ($day = 1; $day <= $daysPassed; $day++) {
-
-                $currentDate = $startDate->addDays($day - 1)->format('Y/m/d');
+            $startDate = Verta::parse($cycle->start_date);
 
 
-                if ($currentDate == $today) {
-                    continue;
-                }
+            $daysNumber = $startDate->diffDays($yesterday);
 
 
-                $exists = $cycle->dailyReports()->where('date', $currentDate)->exists();
-
-                if ($exists) {
-                    $this->info("⛔ گزارش برای روز $currentDate برای دوره {$cycle->id} قبلاً ثبت شده.");
-                    continue;
-                }
-
-
-                $feed = $this->getFeedTypeForDay($day);
-
-                $cycle->dailyReports()->create([
-                    'date' => $currentDate,
-                    'days_number' => $day,
-                    'feed_type' => $feed,
-                ]);
-
-                $this->info("✅ گزارش روز $day برای دوره {$cycle->id} برای تاریخ $currentDate ساخته شد.");
+            if ($cycle->dailyReports()->where('date', $yesterdayDate)->exists()) {
+                $this->info("⛔ گزارش برای تاریخ $yesterdayString قبلاً ثبت شده.");
+                continue;
             }
+
+            $feed = $this->getFeedTypeForDay($daysNumber);
+
+            $cycle->dailyReports()->create([
+                'date' => $yesterdayDate,
+                'days_number' => $daysNumber,
+                'feed_type' => $feed,
+            ]);
+
+            $this->info("✅ گزارش روز $daysNumber برای دوره {$cycle->id} برای تاریخ $yesterdayString ساخته شد.");
         }
     }
+
+
+
+
 
 
 

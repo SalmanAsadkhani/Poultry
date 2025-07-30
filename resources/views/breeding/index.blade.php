@@ -87,7 +87,9 @@
                         </div>
 
                         <div class="body">
-                            <div class="body table-responsive">
+                            <x-responsive-display>
+                                <x-slot:desktop>
+                                    <div class="body table-responsive">
                                 <table class="table table-striped">
                                     <thead>
                                     <tr>
@@ -120,12 +122,62 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{route('breeding.show' , $breeding->id)}}" class="btn btn-outline-primary btn-border-radius">مشاهده</a>
+
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
+                                </x-slot:desktop>
+
+                                <x-slot:mobile>
+
+                                    @foreach($breedingCycles as $k=>$breeding)
+                                        <div class="card mb-3" x-data="{ open: false }">
+                                            <div class="card-header d-flex justify-content-between align-items-center" @click="open = !open" style="cursor: pointer;">
+                                                <strong> <span class="text-danger"> نام دوره :</span> {{  $breeding->name  }}</strong>
+                                                -  <a href="{{route('breeding.show' , $breeding->id)}}" class="btn btn-outline-primary btn-border-radius">مشاهده</a>
+
+                                                <span x-show="!open">▼</span>
+                                                <span x-show="open">▲</span>
+                                            </div>
+
+
+                                            <div class="card-body" x-show="open" x-transition>
+
+                                                <div class="bold text-danger mb-3">تاریخ جوجه ریزی:
+                                                    <span class="text-dark" dir="ltr">{{$breeding->start_date }}</span>
+                                                </div>
+
+                                                <div class="bold text-danger mb-3">:تعداد جوجه ریزی
+                                                    <span class="text-dark">{{ sep($breeding->chicken_count)}} هزار </span>
+                                                </div>
+
+                                                <div class="text-danger mb-3 "> وضعیت :
+                                                    <span
+                                                        class="{{
+                                                        $breeding->status === 1 ?
+                                                        "text-info" :
+                                                        "text-success"
+                                                    }}">
+
+                                                    {{
+                                                        $breeding->status === 1 ?
+                                                        "فعال" :
+                                                        "پایان یافته"
+                                                    }}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                </x-slot:mobile>
+
+
+                            </x-responsive-display>
                         </div>
                     </div>
                 </div>
