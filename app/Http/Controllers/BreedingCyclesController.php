@@ -15,7 +15,10 @@ class BreedingCyclesController extends Controller
 
     public function index()
     {
-        $breedingCycles = BreedingCycle::all();
+
+        $user = auth()->user()->id;
+        $breedingCycles = BreedingCycle::where('user_id' ,$user )->get();
+
         return view('breeding.index' , compact('breedingCycles'));
 
     }
@@ -53,13 +56,11 @@ class BreedingCyclesController extends Controller
 
         $total_feed = $breedingCycle->dailyReports()->sum('feed_count');
 
-        $startDate = Verta::parse($breedingCycle->start_date)->addDays(1);
+        $startDate = Verta::parse($breedingCycle->start_date);
 
         $chickAge = $startDate->diffDays(Verta::now()) + 1;
 
         $today = Verta::now()->subDay()->format('Y/m/d');
-
-
 
         return view('breeding.show', compact('breedingCycle' , 'total_mortality' , 'chickAge' , 'total_feed' , 'today'));
     }

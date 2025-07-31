@@ -49,4 +49,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function cycle()
+    {
+        return $this->hasMany(BreedingCycle::class);
+    }
 }

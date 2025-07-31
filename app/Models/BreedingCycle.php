@@ -18,6 +18,11 @@ class BreedingCycle extends Model
         'status',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function dailyReports()
     {
         return $this->hasMany(DailyReport::class);

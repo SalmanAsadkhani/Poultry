@@ -43,7 +43,7 @@ class GenerateDailyCycles extends Command
             $startDate = Verta::parse($cycle->start_date);
 
 
-            $daysNumber = $startDate->diffDays($yesterday);
+            $daysNumber = $startDate->diffDays($yesterday) + 1;
 
 
             if ($cycle->dailyReports()->where('date', $yesterdayDate)->exists()) {
