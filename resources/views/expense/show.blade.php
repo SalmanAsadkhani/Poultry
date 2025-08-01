@@ -228,6 +228,7 @@
                                         <td>{{ sep($expense->total_price) }}</td>
                                         <td>{{ $expense->description }}</td>
                                         <td>
+
                                             <button
                                                 class="btn tblActnBtn btn-edit"
                                                 data-id="{{ $expense->id }}"

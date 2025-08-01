@@ -4,7 +4,6 @@
 
 @section('js')
 
-
     <script>
         $(document).ready(function() {
             $('.save-report').on('click', function (e) {
@@ -13,18 +12,19 @@
                 const button = $(this);
                 const id = button.data('id');
 
-                let mortality, actions, desc , feed;
-
+                let mortality, actions, desc  ,feed_type, feed;
 
                 if (button.closest('tr').length) {
                     const row = button.closest('tr');
                     mortality = row.find(`input[name="mortality[${id}]"]`).val();
+                    feed_type = row.find(`select[name="feed_type[${id}]"]`).val();
                     feed = row.find(`input[name="feed[${id}]"]`).val();
                     actions = row.find(`input[name="actions[${id}]"]`).val();
                     desc = row.find(`input[name="desc[${id}]"]`).val();
                 } else {
                     const card = button.closest('.card-body');
                     mortality = card.find(`input[name="mortality_mobile[${id}]"]`).val();
+                    feed_type = card.find(`select[name="feed_type_mobile[${id}]"]`).val();
                     feed = card.find(`input[name="feed_mobile[${id}]"]`).val();
                     actions = card.find(`input[name="actions_mobile[${id}]"]`).val();
                     desc = card.find(`input[name="desc_mobile[${id}]"]`).val();
@@ -33,6 +33,7 @@
 
                 const formData = new FormData();
                 formData.append('mortality', mortality);
+                formData.append('feed_type', feed_type);
                 formData.append('feed', feed);
                 formData.append('actions', actions);
                 formData.append('desc', desc);
@@ -85,13 +86,11 @@
         document.addEventListener('DOMContentLoaded', function () {
             const scrollToLastButton = document.getElementById('scrollToTodayBtn');
 
-            // تمام عناصری که این کلاس را دارند، پیدا کن
+
             const lastReportElements = document.querySelectorAll('.last-report-row');
             let visibleLastReportRow = null;
 
-            // در میان آنها بگرد و عنصری که قابل مشاهده است را پیدا کن
             for (const element of lastReportElements) {
-                // el.offsetParent !== null یک راه خوب برای چک کردن قابل مشاهده بودن است
                 if (element.offsetParent !== null) {
                     visibleLastReportRow = element;
                     break;
@@ -207,7 +206,19 @@
 
                                                     <td><input name="actions[{{ $report->id }}]" value="{{ $report->actions_taken }}"></td>
 
-                                                    <td>{{ $report->feed_type }}</td>
+                                                    <td>
+                                                        <select name="feed_type[{{ $report->id }}]" class="form-select" style="display: block">
+                                                            @php
+                                                                $feedTypes = ['استارتر', 'پیش دان', 'میان دان', 'پس دان'];
+                                                            @endphp
+
+                                                            @foreach($feedTypes as $type)
+                                                                <option value="{{ $type }}" @if($report->feed_type == $type) selected @endif>
+                                                                    {{ $type }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
 
                                                     <td><input name="feed[{{ $report->id }}]" value="{{ $report->feed_count }}"></td>
 
@@ -224,7 +235,7 @@
 
                                 <x-slot:mobile>
 
-                                        @foreach($breedingCycle->dailyReports as $report)
+                                    @foreach($breedingCycle->dailyReports as $report)
                                         <div @class(['card', 'mb-3', 'last-report-row' => $loop->last])
                                              x-data="{ open: {{ $loop->last ? 'true' : 'false' }} }">
 
@@ -248,6 +259,22 @@
                                                     <div class="form-group">
                                                         <label class="bold text-danger">داروی مصرفی:</label>
                                                         <input class="form-control" name="actions_mobile[{{ $report->id }}]" value="{{ $report->actions_taken }}">
+                                                    </div>
+
+                                                     <div class="form-group">
+                                                        <label class="bold text-danger">نوع دان:</label>
+
+                                                         <select name="feed_type_mobile[{{ $report->id }}]" class="form-select" style="display: block">
+                                                             @php
+                                                                 $feedTypes = ['استارتر', 'پیش دان', 'میان دان', 'پس دان'];
+                                                             @endphp
+
+                                                             @foreach($feedTypes as $type)
+                                                                 <option value="{{ $type }}" @if($report->feed_type == $type) selected @endif>
+                                                                     {{ $type }}
+                                                                 </option>
+                                                             @endforeach
+                                                         </select>
                                                     </div>
 
                                                     <div class="bold text-danger mb-5">دان:

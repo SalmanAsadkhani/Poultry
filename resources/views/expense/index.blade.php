@@ -86,36 +86,60 @@
 
                         <div class="body">
                             <div class="body table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                    @foreach($cycles as $cycle)
-                                        <h5 class="mt-4 text-primary">دوره: {{ $cycle->name }}</h5>
+                                @forelse($cycles as $cycle)
+
+                                        <h5 class="mt-4 mb-3 text-primary">دوره: {{ $cycle->name }}</h5>
                                         <table class="table table-bordered">
                                             <thead>
                                             <tr>
-                                                <th>#</th>
-                                                <th>صورتحساب</th>
+                                                <th> نام دسته‌بندی </th>
+                                                <th>دسته‌بندی </th>
                                                 <th>جزییات</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach($cycle->expenseCategories as $cat)
+                                            @foreach($cycle->feedCategories as $category)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $cat->name }}</td>
+                                                    <td>{{ $category->name }}</td>
+                                                    <td>دان</td>
                                                     <td>
-                                                        <a href="{{route('expense.show' , $cat->id)}}" class="btn btn-sm btn-outline-primary btn-border-radius">مشاهده</a>
+                                                        <a href="{{ route('expense.category.show', ['type' => 'feed', 'category' => $category->id]) }}" class="btn btn-sm btn-outline-primary btn-border-radius">مشاهده</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
+
+
+                                            @foreach($cycle->drugCategories as $category)
+                                                <tr>
+                                                    <td>{{ $category->name }}</td>
+                                                    <td>داروخانه</td>
+                                                    <td>
+                                                        <a href="{{ route('expense.category.show', ['type' => 'drug', 'category' => $category->id]) }}" class="btn btn-sm btn-outline-primary btn-border-radius">مشاهده</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                            @foreach($cycle->miscellaneousCategories as $category)
+                                                <tr>
+                                                    <td>{{ $category->name }}</td>
+                                                    <td>متفرقه</td>
+                                                    <td>
+                                                        <a href="{{ route('expense.category.show', ['type' => 'misc', 'category' => $category->id]) }}" class="btn btn-sm btn-outline-primary btn-border-radius">مشاهده</a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                            @if($cycle->feedCategories->isEmpty() && $cycle->drugCategories->isEmpty() && $cycle->miscellaneousCategories->isEmpty())
+                                                <tr>
+                                                    <td colspan="3" class="text-center">هیچ صورتحساب ثبت نشده است.</td>
+                                                </tr>
+                                            @endif
                                             </tbody>
                                         </table>
-                                    @endforeach
 
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                                @empty
+                                    <p class="text-center">هیچ دوره‌ای یافت نشد.</p>
+                                @endforelse
                             </div>
                         </div>
                     </div>
@@ -146,6 +170,15 @@
                                 @empty
                                     <option disabled selected>هیچ دوره‌ای موجود نیست</option>
                                 @endforelse
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label"> دسته‌بندی:</label>
+                            <select name="expense_category" id="Expense_category" style="display: block">
+                                <option value="feed">دان</option>
+                                <option value="drug">داروخانه</option>
+                                <option value="misc">متفرقه</option>
                             </select>
                         </div>
 

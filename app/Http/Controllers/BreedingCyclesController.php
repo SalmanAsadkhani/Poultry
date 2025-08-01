@@ -11,8 +11,6 @@ use Hekmatinasser\Verta\Facades\Verta;
 class BreedingCyclesController extends Controller
 {
 
-
-
     public function index()
     {
 
@@ -65,14 +63,14 @@ class BreedingCyclesController extends Controller
         return view('breeding.show', compact('breedingCycle' , 'total_mortality' , 'chickAge' , 'total_feed' , 'today'));
     }
 
-
-    public function daily_confirm(StoreDaily $request)
+    public function store(StoreDaily $request)
     {
         $daily = DailyReport::with('cycle')->where('id', $request->daily_id)->first();
 
         $daily->update([
             'breeding_cycle_id' => $daily->cycle->id,
             'mortality_count' =>fa2la( $request->mortality),
+            'feed_type' => $request->feed_type,
             'feed_count' =>fa2la( $request->feed),
             'description' => $request->desc,
             'actions_taken' => $request->actions,
@@ -110,9 +108,6 @@ class BreedingCyclesController extends Controller
             DailyReport::query()->upsert($updates, ['id'], ['total_mortality']);
         }
     }
-
-
-
 
 
 

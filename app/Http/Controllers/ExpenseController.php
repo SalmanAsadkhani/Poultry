@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\updateExpense;
-use App\Http\Requests\StoreExpense;
+use App\Http\Requests\StoreInvoiceRequest;
+use App\Http\Requests\UpdateExpenseRequest;
+use App\Http\Requests\StoreExpenseRequest;
 use App\Models\BreedingCycle;
+use App\Models\Drug;
+use App\Models\DrugCategory;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Models\Feed;
+use App\Models\FeedCategory;
+use App\Models\Miscellaneous;
+use App\Models\MiscellaneousCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,88 +22,131 @@ class ExpenseController extends Controller
 {
     public function index() : View
     {
-        $cycles = BreedingCycle::where('user_id', auth()->id())->get();
+        $cycles = BreedingCycle::with([
+            'feedCategories',
+            'drugCategories',
+            'miscellaneousCategories'
+        ])->where('user_id', auth()->id())->get();
+
         return view('expense.index' , compact('cycles'));
     }
 
-    public function Invoice(Request $request ): JsonResponse
+    public function Invoice(StoreInvoiceRequest $request ): JsonResponse
     {
 
-        $request->validate([
-            'breeding_cycle_id' => 'required|exists:breeding_cycles,id',
-            'NameInvoice' => ['required', 'string', 'max:255' , 'min:3'],
+        $model = match ($request['expense_category']) {
+            'feed' => FeedCategory::class,
+            'drug' => DrugCategory::class,
+            'misc' => MiscellaneousCategory::class,
+        };
+
+
+        $model::create([
+            'breeding_cycle_id' => $request->breeding_cycle_id ,
+            'name' => $request->NameInvoice,
         ]);
 
-        $expense = ExpenseCategory::create([
-            'breeding_cycle_id' => $request->breeding_cycle_id,
-            'name' => $request->NameInvoice,
-            'status' => 1
-        ]);
 
         return response()->json(['res' => 10]);
 
     }
 
-    public function show($id): View
+    public function showCategory(string $type, int $categoryId) : View
     {
-        $expenseCate = ExpenseCategory::with(  'expenses')->where('id', $id)->firstOrFail();
 
-        $total_feed = $expenseCate->expenses->sum('quantity');
-        $total_price = $expenseCate->expenses->sum('total_price');
-        $average_price = $expenseCate->expenses->avg('unit_price');
+        [$categoryModel, $relation, $viewName, $titlePrefix] = match ($type) {
+            'feed' => [FeedCategory::class, 'feeds', 'expense.show-feed', 'صورتحساب دان'],
+            'drug' => [DrugCategory::class, 'drugs', 'expense.show-drug', 'صورتحساب  داروخانه'],
+            'misc' => [MiscellaneousCategory::class, 'miscellaneous', 'expense.show-misc', 'صورتحساب  متفرقه'],
 
-        return view('expense.show' , compact('expenseCate' , 'total_feed' , 'total_price' , 'average_price'));
+        };
+
+        $category = $categoryModel::with($relation)->findOrFail($categoryId);
+
+        return view($viewName, [
+            'category' => $category,
+            'expenses' => $category->$relation,
+            'title'    => $titlePrefix,
+        ]);
     }
 
-    public function store(StoreExpense $request ): JsonResponse
+    public function store(StoreExpenseRequest $request) : JsonResponse
     {
-        $expense = Expense::create([
+        [$model, $categoryIdKey] = match ($request->type) {
+            'feed' => [Feed::class, 'feed_category_id'],
+            'drug' => [Drug::class, 'drug_category_id'],
+            'misc' => [Miscellaneous::class, 'miscellaneous_category_id'],
+        };
+
+
+
+        $data = [
             'breeding_cycle_id' => $request->breeding_cycle_id,
-            'expense_category_id' => $request->expense_category_id,
-            'name' => $request->name,
-            'quantity' => $request->quantity,
-            'unit_price' => $request->unit_price,
-            'description' => $request->description,
-            'status' => 1
-        ]);
+            $categoryIdKey      => $request->category_id,
+            'name'              => $request->name,
+            'quantity'          => $request->quantity,
+            'price'             => $request->unit_price,
+            'description'       => $request->description,
+        ];
+
+
+        $model::create($data);
 
         return response()->json([
             'res' => 10,
-            'mySuccess' => 'با موفقیت ثبت گردید'
+            'mySuccess' => 'رکورد با موفقیت اضافه گردید'
         ]);
     }
 
-    public function update(updateExpense $request , $id ): JsonResponse
+    public function update(UpdateExpenseRequest $request, $id) : JsonResponse
     {
-        $expense = Expense::where('id', $id)->first();
 
-        $expense->update([
+
+       [ $model , $categoryIdKey ] = match ($request->type) {
+            'feed' => [Feed::class, 'feed_category_id'],
+            'drug' => [Drug::class, 'drug_category_id'],
+            'misc' => [Miscellaneous::class, 'miscellaneous_category_id'],
+        };
+
+        $expense = $model::findOrFail($request->id);
+
+        $data = [
             'breeding_cycle_id' => $request->breeding_cycle_id,
-            'expense_category_id' => $request->expense_category_id,
-            'name' => $request->name,
+            $categoryIdKey      => $request->category_id,
+            'name'=> $request->name,
             'quantity' => $request->quantity,
-            'unit_price' => $request->unit_price,
+            'price' => $request->unit_price,
             'description' => $request->description,
-            'status' => 1,
-        ]);
+        ];
+
+
+        $expense->update($data);
 
         return response()->json([
             'res' => 10,
-            'mySuccess' => 'با موفقیت ,ویرایش گردید'
+            'mySuccess' => 'رکورد با موفقیت ویرایش گردید',
         ]);
     }
 
-    public function delete($id)
+    public function destroy(Request $request, $id) : JsonResponse
     {
-        $expense = Expense::where('id', $id)->first();
 
+        $request->validate(['type' => 'required|string|in:feed,drug,misc']);
+
+        $model = match ($request->type) {
+            'feed' => Feed::class,
+            'drug' => Drug::class,
+            'misc' => Miscellaneous::class,
+        };
+
+
+        $expense = $model::findOrFail($request->id);
         $expense->delete();
 
         return response()->json([
             'res' => 10,
             'mySuccess' => 'رکورد با موفقیت حذف گردید'
         ]);
-
     }
 
 }

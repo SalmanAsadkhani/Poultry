@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('revenues', function (Blueprint $table) {
+        Schema::create('feed_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('breeding_cycle_id')->constrained('breeding_cycles')->cascadeOnDelete();
+            $table->foreignId('breeding_cycle_id')->constrained('breeding_cycles')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
-            $table->bigInteger('quantity');
-            $table->bigInteger('unit_price')->nullable();
-            $table->string('customer')->nullable();
-            $table->string('description')->nullable();
             $table->bigInteger('status')->default(1);
             $table->timestamps();
         });
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('revenues');
+        Schema::dropIfExists('feed_categories');
     }
 };

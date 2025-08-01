@@ -28,8 +28,18 @@ class BreedingCycle extends Model
         return $this->hasMany(DailyReport::class);
     }
 
-    public function expenseCategories(): HasMany
+    public function feedCategories()
     {
-        return $this->hasMany(ExpenseCategory::class);
+        return $this->hasMany(FeedCategory::class);
+    }
+
+    public function drugCategories()
+    {
+        return $this->hasMany(DrugCategory::class);
+    }
+
+    public function miscellaneousCategories()
+    {
+        return $this->hasMany(MiscellaneousCategory::class);
     }
 }

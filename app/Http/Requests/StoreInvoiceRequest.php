@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class updateExpense extends FormRequest
+class StoreInvoiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,9 @@ class updateExpense extends FormRequest
     public function rules(): array
     {
         return [
-            'breeding_cycle_id' => ['required', 'integer', 'exists:breeding_cycles,id'],
-            'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
-            'name' => ['required', 'string', 'min:2', 'max:255'],
-            'quantity' => ['required', 'integer', 'min:1'],
-            'unit_price' => ['nullable', 'integer', 'min:1'],
-            'description' => ['nullable', 'string', 'min:3', 'max:255'],
+            'breeding_cycle_id' => 'required|exists:breeding_cycles,id',
+            'expense_category'  => 'required|string|in:feed,drug,misc',
+            'NameInvoice'       => ['required', 'string', 'max:255' , 'min:3'],
         ];
     }
 }

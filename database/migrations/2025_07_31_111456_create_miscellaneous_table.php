@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('revenue_categories', function (Blueprint $table) {
+        Schema::create('miscellaneous', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->foreignId('breeding_cycle_id')->constrained('breeding_cycles')->cascadeOnDelete();
+            $table->foreignId('miscellaneous_category_id')->constrained('miscellaneous_categories')->cascadeOnDelete();
+            $table->string('name');
+            $table->bigInteger('quantity');
+            $table->bigInteger('price')->nullable();
+            $table->text('description')->nullable();
             $table->bigInteger('status')->default(1);
             $table->timestamps();
         });
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('revenue_categories');
+        Schema::dropIfExists('miscellaneous');
     }
 };
