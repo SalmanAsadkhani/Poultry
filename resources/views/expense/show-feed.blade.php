@@ -141,9 +141,10 @@
                                                 <button
                                                     class="btn btn-sm btn-primary btn-edit"
                                                     data-id="{{ $expense->id }}"
-                                                    data-type="drug"
+                                                    data-type="feed"
                                                     data-name="{{ $expense->name }}"
                                                     data-quantity="{{ $expense->quantity }}"
+                                                    data-bag_count="{{ $expense->bag_count }}"
                                                     data-price="{{ $expense->price }}"
                                                     data-description="{{ $expense->description }}"
                                                     data-bs-toggle="modal"
