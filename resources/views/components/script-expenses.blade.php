@@ -73,8 +73,6 @@
 
     });
 
-
-
     document.addEventListener('DOMContentLoaded', function() {
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -158,9 +156,7 @@
         setupEditModal('UpdateMiscModal');
     });
 
-
-
- document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
@@ -212,11 +208,32 @@
      setupDeleteModal('DeleteMiscModal', 'misc');
     });
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const allEditModals = document.querySelectorAll('.edit-expense-modal');
 
+        allEditModals.forEach(modal => {
+            modal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const form = this.querySelector('form');
 
+                for (const key in button.dataset) {
 
+                    let fieldName = key;
 
+                    if (key === 'price') {
+                        fieldName = 'unit_price';
+                    }
 
+                    const input = form.querySelector(`[name="${fieldName}"]`);
+
+                    if (input) {
+                        input.value = button.dataset[key];
+                    }
+                }
+            });
+
+        });
+    });
 </script>
 
 

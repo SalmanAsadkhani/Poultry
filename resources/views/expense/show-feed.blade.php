@@ -3,7 +3,8 @@
 @section('title','هزینه‌ها')
 
 @section('js')
-        <x-scriptExpenses/>
+    <x-scriptExpenses/>
+
 @endsection
 
 @section('main')
@@ -67,7 +68,7 @@
                                                     <button
                                                         class="btn tblActnBtn btn-edit"
                                                         data-id="{{ $expense->id }}"
-                                                        data-type="drug"
+                                                        data-type="feed"
                                                         data-name="{{ $expense->name }}"
                                                         data-quantity="{{ $expense->quantity }}"
                                                         data-bag_count="{{ $expense->bag_count }}"
@@ -223,11 +224,11 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="UpdateFeedModal" tabindex="-1" aria-labelledby="UpdateFeedModalLabel" aria-hidden="true">
+            <div class="modal fade  edit-expense-modal" id="UpdateFeedModal" tabindex="-1" aria-labelledby="UpdateFeedModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="UpdateFeedModalLabel">ویرایش </h5>
+                            <h5 class="modal-title" id="UpdateFeedModalLabel">ویرایش دان</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -239,24 +240,25 @@
                                 <input type="hidden" id="edit-feed-id" name="id">
 
                                 <div class="mb-3">
-                                    <label for="edit-name" class="form-label">نام</label>
-                                    <input type="text" name="name" id="edit-name" class="form-control" value="{{$expense->name ?? '-'}}">
+                                    <label for="edit-feed-name" class="form-label">نام</label>
+
+                                    <input type="text" name="name" id="edit-feed-name" class="form-control">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">وزن   <small>(کیلوگرم)</small></label>
-                                    <input type="tel" name="quantity" id="edit-quantity" class="form-control" value="{{$expense->quantity ?? '-'}}" dir="rtl">
+                                    <label for="edit-feed-quantity" class="form-label">وزن <small>(کیلوگرم)</small></label>
+                                    <input type="tel" name="quantity" id="edit-feed-quantity" class="form-control" dir="rtl">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">تعداد کیسه </label>
-                                    <input type="tel" name="bag_count" id="edit-bag_count" class="form-control" value="{{$expense->bag_count ?? '-'}}" dir="rtl">
+                                    <label for="edit-feed-bag_count" class="form-label">تعداد کیسه</label>
+                                    <input type="tel" name="bag_count" id="edit-feed-bag_count" class="form-control" dir="rtl">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="edit-unit_price" class="form-label">قیمت واحد <small>(تومان)</small></label>
-                                    <input type="tel" name="unit_price" id="edit-unit_price" class="form-control" value="{{$expense->price ?? '-'}}" dir="rtl">
+                                    <label for="edit-feed-price" class="form-label">قیمت واحد <small>(تومان)</small></label>
+                                    <input type="tel" name="unit_price" id="edit-feed-price" class="form-control" dir="rtl">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="edit-description" class="form-label">توضیحات</label>
-                                    <textarea name="description" id="edit-description" class="form-control" rows="3">{{$expense->description ?? '-'}}</textarea>
+                                    <label for="edit-feed-description" class="form-label">توضیحات</label>
+                                    <textarea name="description" id="edit-feed-description" class="form-control" rows="3"></textarea>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
@@ -276,7 +278,7 @@
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>آیا مطمئن هستید که می‌خواهید  <span class="text-danger"> {{$expense->name ?? '-'}}</span> <strong class="text-danger" id="delete-expense-name"></strong> را حذف کنید؟</p>
+                            <p>آیا مطمئن هستید که می‌خواهید  <span class="text-danger"> {{$expense->name ?? ''}}</span> <strong class="text-danger" id="delete-expense-name"></strong> را حذف کنید؟</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>

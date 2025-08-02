@@ -91,127 +91,14 @@
 <script src="{{url('')}}/assets/js/pages/charts/jquery-knob.js"></script>
 <script src="{{url('')}}/assets/js/pages/sparkline/sparkline-data.js"></script>
 <script src="{{url('')}}/assets/js/pages/medias/carousel.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-<script>
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-left",
-        "preventDuplicates": false,
-        "showDuration": "200",
-        "hideDuration": "300",
-        "timeOut": "1500",
-        "extendedTimeOut": "500",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    };
+<x-toast-r/>
 
-    function showToastSuccess(message) {
-        toastr.success(message, 'موفقیت');
-    }
+<x-service-worker/>
 
-    function showToastError(message) {
-        toastr.error(message, 'خطا');
-    }
-
-</script>
-
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register({{ asset("sw.js") }})
-                .then(registration => {
-                    console.log('Service Worker registered successfully: ', registration);
-                })
-                .catch(err => {
-                    console.log('Service Worker registration failed: ', err);
-                });
-        });
-    }
-
-    let deferredPrompt;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-
-
-        const installButton = document.getElementById('installButton');
-        if (installButton) {
-            installButton.style.display = 'block';
-        }
-    });
-
-    const installButton = document.getElementById('installButton');
-    if (installButton) {
-        installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-
-                deferredPrompt.prompt();
-
-
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-
-                deferredPrompt = null;
-
-                installButton.style.display = 'none';
-            }
-        });
-    }
-</script>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', function () {
-
-        function toEnglishNumerals(str) {
-            if (!str) return '';
-            const persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-            const arabic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-            let res = str.toString();
-            for (let i = 0; i < 10; i++) {
-                res = res.replace(new RegExp(persian[i], 'g'), i)
-                    .replace(new RegExp(arabic[i], 'g'), i);
-            }
-            return res;
-        }
-
-
-        function formatNumberInput(input) {
-
-            let value = toEnglishNumerals(input.value).replace(/\D/g, '');
-
-            input.value = value ? parseInt(value, 10).toLocaleString('en-US') : '';
-        }
-
-        const inputs = document.querySelectorAll('input[type="tel"]');
-        inputs.forEach(input => {
-
-            input.addEventListener('input', () => formatNumberInput(input));
-            formatNumberInput(input);
-        });
-
-
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-
-            form.addEventListener('submit', function () {
-                form.querySelectorAll('input[type="tel"]').forEach(input => {
-                    input.value = toEnglishNumerals(input.value).replace(/,/g, '');
-                });
-            });
-        });
-
-    });
-</script>
+<x-service-js/>
 
 @yield('js')
 </body>

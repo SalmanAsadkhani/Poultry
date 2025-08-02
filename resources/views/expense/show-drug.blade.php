@@ -4,6 +4,8 @@
 
 @section('js')
     <x-scriptExpenses/>
+
+
 @endsection
 
 @section('main')
@@ -208,7 +210,7 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="UpdateDrugModal" tabindex="-1" aria-labelledby="UpdateDrugModalLabel" aria-hidden="true">
+            <div class="modal fade  edit-expense-modal" id="UpdateDrugModal" tabindex="-1" aria-labelledby="UpdateDrugModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -218,26 +220,27 @@
                         <div class="modal-body">
                             <form id="UpdateDrugForm" method="post">
                                 @csrf
-                                <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                <input type="hidden" name="breeding_cycle_id" value="{{ $category->breeding_cycle_id }}">
+
+                                <input type="hidden" name="category_id" value="{{ $category->id  ?? '' }}">
+                                <input type="hidden" name="breeding_cycle_id" value="{{ $category->breeding_cycle_id  ?? ''}}">
                                 <input type="hidden" name="type" value="drug">
                                 <input type="hidden" id="edit-drug-id" name="id">
 
                                 <div class="mb-3">
-                                    <label class="form-label">نام دارو </label>
-                                    <input type="text" name="name" class="form-control" value="{{$expense->name ?? '-'}}" >
+                                    <label for="edit-drug-name" class="form-label">نام دارو</label>
+                                    <input type="text" name="name" id="edit-drug-name" class="form-control">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">تعداد</label>
-                                    <input type="tel" name="quantity" class="form-control" value="{{$expense->quantity ?? '-'}}" dir="rtl"  >
+                                    <label for="edit-drug-quantity" class="form-label">تعداد</label>
+                                    <input type="tel" name="quantity" id="edit-drug-quantity" class="form-control" dir="rtl">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">قیمت واحد<small>(تومان)</small> </label>
-                                    <input type="tel" name="unit_price" class="form-control" value="{{$expense->price ?? '-'}}" dir="rtl">
+                                    <label for="edit-drug-price" class="form-label">قیمت واحد<small>(تومان)</small></label>
+                                    <input type="tel" name="unit_price" id="edit-drug-price" class="form-control" dir="rtl">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">توضیحات</label>
-                                    <textarea name="description" class="form-control">{{$expense->decription  ?? '-'}}</textarea>
+                                    <label for="edit-drug-description" class="form-label">توضیحات</label>
+                                    <textarea name="description" id="edit-drug-description" class="form-control" rows="3"></textarea>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
