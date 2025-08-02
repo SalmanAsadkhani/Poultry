@@ -42,4 +42,9 @@ class BreedingCycle extends Model
     {
         return $this->hasMany(MiscellaneousCategory::class);
     }
+
+    public function feeds(): HasMany
+    {
+        return $this->hasMany(Feed::class);
+    }
 }

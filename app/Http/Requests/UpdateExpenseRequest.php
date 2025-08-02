@@ -22,13 +22,19 @@ class UpdateExpenseRequest extends FormRequest
     // app/Http/Requests/UpdateExpenseRequest.php
     public function rules(): array
     {
-         return[
+         $rules =[
             'name'        => 'required|string|min:2|max:100',
             'type'        => 'required|string|in:feed,drug,misc',
             'quantity'    => 'required|integer|min:1',
             'price'       => 'nullable|integer|min:0',
             'description' => 'nullable|string',
         ];
+
+        if ($this->type == 'feed') {
+            $rules['bag_count'] = 'required|integer|min:1|max:450';
+        }
+
+        return $rules;
 
     }
 }

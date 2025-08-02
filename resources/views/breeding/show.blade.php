@@ -140,16 +140,18 @@
                         <div class="card shadow-sm border-0 h-100 text-center">
                             <div class="card-body">
                                 <h6 class="text-muted mb-4"> سن جوجه </h6>
-                                <h4 class="fw-bold text-danger">{{$chickAge}} روزه</h4>
+                                <h4 class="fw-bold text-danger">{{ $chickAge }} روزه</h4>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="col-lg-4 col-md-3">
                         <div class="card shadow-sm border-0 h-100 text-center">
                             <div class="card-body">
                                 <h6 class="text-muted mb-4"> جمع تلفات کل</h6>
-                                <h4 class="fw-bold text-primary">{{$total_mortality}} تلفات</h4>
+
+                                <h4 class="fw-bold text-primary">{{ sep($cycle->total_mortality) }} تلفات</h4>
                             </div>
                         </div>
                     </div>
@@ -157,11 +159,30 @@
                     <div class="col-lg-4 col-md-3">
                         <div class="card shadow-sm border-0 h-100 text-center">
                             <div class="card-body">
-                                <h6 class="text-muted mb-4">تعداد کل دان مصرفی</h6>
-                                <h4 class="fw-bold text-price">  {{$total_feed}}کیسه</h4>
+                                <h6 class="text-muted mb-4">جمع کل دان مصرفی (کیلوگرم)</h6>
+                                <h4 class="fw-bold text-success">{{ sep($grandTotalWeight) }}</h4>
                             </div>
                         </div>
                     </div>
+
+                    @if(!empty($feedSummary))
+                        <div class="col-lg-4 col-md-3">
+                            <div class="card shadow-sm border-0 h-100 text-center">
+                                <div class="card-body">
+                                        <h6 class="text-muted mb-4"> خلاصه مصرف دان</h6>
+                                    @foreach($feedSummary as $summary)
+                                       <div >
+                                           <h5  class="fw-bold text-primary mb-2">{{ $summary['name'] }}:</h5>
+                                           <h6  class="fw-bold text-secondary mb-4">{{ sep($summary['total_weight_used']) }} کیلوگرم
+                                               <small>(از {{ $summary['bags_used'] }} کیسه)</small>
+                                           </h6>
+                                       </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
 
                 </div>
             </div>
@@ -192,7 +213,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach($breedingCycle->dailyReports as $report)
+                                            @foreach($cycle->dailyReports as $report)
                                                 <tr  @if($loop->last)  class="last-report-row" @endif>
 
 
@@ -235,7 +256,7 @@
 
                                 <x-slot:mobile>
 
-                                    @foreach($breedingCycle->dailyReports as $report)
+                                    @foreach($cycle->dailyReports as $report)
                                         <div @class(['card', 'mb-3', 'last-report-row' => $loop->last])
                                              x-data="{ open: {{ $loop->last ? 'true' : 'false' }} }">
 

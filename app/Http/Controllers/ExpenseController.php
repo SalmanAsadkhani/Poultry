@@ -16,6 +16,7 @@ use App\Models\Miscellaneous;
 use App\Models\MiscellaneousCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ExpenseController extends Controller
@@ -63,21 +64,44 @@ class ExpenseController extends Controller
 
         $category = $categoryModel::with($relation)->findOrFail($categoryId);
 
+
+        $Value = 0;
+        $Label = '';
+
+        switch ($type) {
+            case 'feed':
+
+                $Value = $category->$relation()->sum('quantity');
+                $Label = 'مجموع دان مصرفی (کیلوگرم)';
+                break;
+            case 'drug':
+            case 'misc':
+
+                $Value = $category->$relation()->sum(DB::raw('quantity * price'));
+                $Label = 'جمع کل هزینه‌ها (تومان)';
+                break;
+        }
+
+
         return view($viewName, [
             'category' => $category,
             'expenses' => $category->$relation,
             'title'    => $titlePrefix,
+            'summary'  => [
+                'value' => $Value,
+                'label' => $Label
+            ]
         ]);
     }
 
     public function store(StoreExpenseRequest $request) : JsonResponse
     {
+
         [$model, $categoryIdKey] = match ($request->type) {
             'feed' => [Feed::class, 'feed_category_id'],
             'drug' => [Drug::class, 'drug_category_id'],
             'misc' => [Miscellaneous::class, 'miscellaneous_category_id'],
         };
-
 
 
         $data = [
@@ -89,12 +113,16 @@ class ExpenseController extends Controller
             'description'       => $request->description,
         ];
 
+        if ($request->type == 'feed') {
+            $data['bag_count'] = $request->bag_count;
+        }
+
 
         $model::create($data);
 
         return response()->json([
             'res' => 10,
-            'mySuccess' => 'رکورد با موفقیت اضافه گردید'
+            'mySuccess' => "  {$request->name} با موفقیت اضافه گردید"
         ]);
     }
 
@@ -119,12 +147,15 @@ class ExpenseController extends Controller
             'description' => $request->description,
         ];
 
+        if ($request->type == 'feed') {
+            $data['bag_count'] = $request->bag_count;
+        }
 
         $expense->update($data);
 
         return response()->json([
             'res' => 10,
-            'mySuccess' => 'رکورد با موفقیت ویرایش گردید',
+            'mySuccess' => "  {$request->name} با موفقیت ویرایش گردید"
         ]);
     }
 
@@ -145,7 +176,7 @@ class ExpenseController extends Controller
 
         return response()->json([
             'res' => 10,
-            'mySuccess' => 'رکورد با موفقیت حذف گردید'
+            'mySuccess' => "  {$expense->name} با موفقیت حذف گردید"
         ]);
     }
 

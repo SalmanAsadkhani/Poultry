@@ -9,6 +9,22 @@
 @section('main')
     <section class="content">
         <div class="container-fluid">
+
+            <div class="container my-5">
+                <div class="d-flex flex-wrap align-items-center g-4">
+
+                    <div class="col-lg-4 col-md-3">
+                        <div class="card shadow-sm border-0 h-100 text-center">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-4">{{ $summary['label'] }}</h6>
+                                <h4 class="fw-bold text-primary">{{ sep($summary['value']) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-lg-12">
 
@@ -219,7 +235,7 @@
                                     <input type="tel" name="quantity" id="edit-quantity" class="form-control" value="{{$expense->quantity ?? '-'}}" dir="rtl">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="edit-unit_price" class="form-label">قیمت واحد</label>
+                                    <label for="edit-unit_price" class="form-label">قیمت واحد <small>(تومان)</small></label>
                                     <input type="tel" name="unit_price" id="edit-unit_price" class="form-control" value="{{$expense->price ?? '-'}}" dir="rtl">
                                 </div>
                                 <div class="mb-3">

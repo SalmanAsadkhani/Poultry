@@ -232,6 +232,7 @@ return [
         'expense_category_id' => 'صورتحساب',
         'quantity' => "تعداد" ,
         'unit_price' =>"قیمت واحد" ,
+        'bag_count' => 'تعداد کیسه'
 
     ],
 ];

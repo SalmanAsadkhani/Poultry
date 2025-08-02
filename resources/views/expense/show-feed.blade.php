@@ -9,6 +9,22 @@
 @section('main')
     <section class="content">
         <div class="container-fluid">
+
+            <div class="container my-5">
+                <div class="d-flex flex-wrap align-items-center g-4">
+
+                    <div class="col-lg-4 col-md-3">
+                        <div class="card shadow-sm border-0 h-100 text-center">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-4">{{ $summary['label'] }}</h6>
+                                <h4 class="fw-bold text-primary">{{ sep($summary['value']) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-lg-12">
 
@@ -28,6 +44,7 @@
                                             <th>#</th>
                                             <th>عنوان</th>
                                             <th>وزن</th>
+                                            <th>تعداد کیسه</th>
                                             <th>قیمت واحد <small>(تومان)</small></th>
                                             <th>قیمت کل <small>(تومان)</small></th>
                                             <th>توضیحات</th>
@@ -42,6 +59,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $expense->name }}</td>
                                                 <td>{{ $expense->quantity }}</td>
+                                                <td>{{ $expense->bag_count }}</td>
                                                 <td>{{ sep($expense->price) }}</td>
                                                 <td>{{ sep($expense->quantity * $expense->price) }}</td>
                                                 <td>{{ $expense->description }}</td>
@@ -52,6 +70,7 @@
                                                         data-type="drug"
                                                         data-name="{{ $expense->name }}"
                                                         data-quantity="{{ $expense->quantity }}"
+                                                        data-bag_count="{{ $expense->bag_count }}"
                                                         data-price="{{ $expense->price }}"
                                                         data-description="{{ $expense->description }}"
                                                         data-bs-toggle="modal"
@@ -99,6 +118,10 @@
 
                                             <div class="bold text-danger mb-5"> وزن :
                                                 <span class="text-dark">{{ $expense->quantity }}</span>
+                                            </div>
+
+                                            <div class="bold text-danger mb-5"> تعداد کیسه :
+                                                <span class="text-dark">{{ $expense->bag_count }}</span>
                                             </div>
 
                                             <div class="bold text-danger mb-5"> قیمت واحد :
@@ -174,11 +197,17 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">وزن   <small>(کیلوگرم)</small></label>
-                                    <input type="tel" name="quantity" class="form-control"   placeholder="مثلا: 2000">
+                                    <input type="tel" name="quantity" class="form-control"   placeholder="مثلا: 2000" dir="rtl">
                                 </div>
+
+                                  <div class="mb-3">
+                                      <label class="form-label">تعداد کیسه </label>
+                                    <input type="tel" name="bag_count" class="form-control" placeholder="مثلا: 50" dir="rtl">
+                                </div>
+
                                 <div class="mb-3">
-                                    <label class="form-label">قیمت واحد</label>
-                                    <input type="tel" name="unit_price" class="form-control"  placeholder="مثلا: 20,000">
+                                    <label class="form-label">قیمت واحد <small>(تومان)</small></label>
+                                    <input type="tel" name="unit_price" class="form-control"  placeholder="مثلا: 20,000" dir="rtl">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">توضیحات</label>
@@ -214,11 +243,15 @@
                                     <input type="text" name="name" id="edit-name" class="form-control" value="{{$expense->name ?? '-'}}">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="edit-quantity" class="form-label">تعداد</label>
+                                    <label class="form-label">وزن   <small>(کیلوگرم)</small></label>
                                     <input type="tel" name="quantity" id="edit-quantity" class="form-control" value="{{$expense->quantity ?? '-'}}" dir="rtl">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="edit-unit_price" class="form-label">قیمت واحد</label>
+                                    <label class="form-label">تعداد کیسه </label>
+                                    <input type="tel" name="bag_count" id="edit-bag_count" class="form-control" value="{{$expense->bag_count ?? '-'}}" dir="rtl">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-unit_price" class="form-label">قیمت واحد <small>(تومان)</small></label>
                                     <input type="tel" name="unit_price" id="edit-unit_price" class="form-control" value="{{$expense->price ?? '-'}}" dir="rtl">
                                 </div>
                                 <div class="mb-3">

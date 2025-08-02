@@ -102,6 +102,7 @@
                 form.querySelector('input[name="id"]')?.setAttribute('value', button.dataset.id);
                 form.querySelector('input[name="name"]')?.setAttribute('value', button.dataset.name);
                 form.querySelector('input[name="quantity"]').value = button.dataset.quantity;
+                form.querySelector('input[name="bag_count"]').value = button.dataset.bag_count;
                 form.querySelector('input[name="unit_price"]').value = button.dataset.price;
                 form.querySelector('textarea[name="description"]').textContent = button.dataset.description;
             });

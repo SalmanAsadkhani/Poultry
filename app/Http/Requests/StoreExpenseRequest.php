@@ -11,7 +11,7 @@ class StoreExpenseRequest extends FormRequest
 
     public function rules(): array
     {
-       return  [
+        $rules =  [
             'type'              => 'required|string|in:feed,drug,misc',
             'name'              => 'required|string|min:3|max:255',
             'category_id'       => 'required|integer',
@@ -20,5 +20,15 @@ class StoreExpenseRequest extends FormRequest
             'unit_price'        => 'nullable|integer|min:0',
             'description'       => 'nullable|string',
         ];
+
+        if ($this->type == 'feed') {
+            $rules['bag_count'] = 'required|integer|min:1|max:450';
+        }
+
+        return $rules;
     }
+
+
+
+
 }

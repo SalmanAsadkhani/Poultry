@@ -12,6 +12,7 @@ class Feed extends Model
         'feed_category_id',
         'name',
         'quantity',
+        'bag_count',
         'price',
         'description',
         'status',
@@ -21,5 +22,11 @@ class Feed extends Model
     public function feed_category() :belongsTo
     {
         return $this->belongsTo(FeedCategory::class , 'feed_category_id');
+    }
+
+
+    public function cycle():belongsTo
+    {
+        return $this->belongsTo(BreedingCycle::class , 'breeding_cycle_id');
     }
 }
