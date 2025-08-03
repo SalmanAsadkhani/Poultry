@@ -60,30 +60,27 @@ class BreedingCyclesController extends Controller
         $startDate = Verta::parse($cycle->start_date);
         $chickAge = $startDate->diffDays(Verta::now()) + 1;
 
-
         $feedPurchases = $cycle->feeds()
             ->select('name', DB::raw('SUM(quantity) as total_weight'), DB::raw('SUM(bag_count) as total_bags'))
             ->groupBy('name')
             ->get()
             ->keyBy('name');
 
-        $usedFeedTypes = $cycle->dailyReports
-            ->whereNotNull('feed_type')
-            ->where('feed_count', '>', 0)
-            ->pluck('feed_type')
-            ->unique();
+
+        $allConsumptions = $cycle->dailyReports()->with('feedConsumptions')->get()->pluck('feedConsumptions')->flatten();
+
+        $consumptionsByType = $allConsumptions->groupBy('feed_type');
 
         $feedSummary = [];
         $grandTotalWeight = 0;
 
 
-        foreach ($usedFeedTypes as $feedName) {
-
+        foreach ($consumptionsByType as $feedName => $consumptions) {
             $purchase = $feedPurchases->get($feedName);
 
             if ($purchase && $purchase->total_bags > 0) {
                 $avgWeightPerBag = $purchase->total_weight / $purchase->total_bags;
-                $bagsUsed = $cycle->dailyReports->where('feed_type', $feedName)->sum('feed_count');
+                $bagsUsed = $consumptions->sum('bag_count');
                 $totalWeightConsumed = $bagsUsed * $avgWeightPerBag;
 
                 $feedSummary[] = [
@@ -91,7 +88,6 @@ class BreedingCyclesController extends Controller
                     'total_weight_used' => round($totalWeightConsumed),
                     'bags_used' => $bagsUsed,
                 ];
-
                 $grandTotalWeight += round($totalWeightConsumed);
             }
         }
@@ -106,19 +102,34 @@ class BreedingCyclesController extends Controller
 
     public function store(StoreDaily $request)
     {
-        $daily = DailyReport::with('cycle')->where('id', $request->daily_id)->first();
+
+        $daily = DailyReport::findOrFail($request->daily_id);
 
         $daily->update([
-            'breeding_cycle_id' => $daily->cycle->id,
-            'mortality_count' =>fa2la( $request->mortality),
-            'feed_type' => $request->feed_type,
-            'feed_count' =>fa2la( $request->feed),
-            'description' => $request->desc,
-            'actions_taken' => $request->actions,
+            'mortality_count' => fa2la($request->mortality),
+            'description'     => $request->desc,
+            'actions_taken'   => $request->actions,
         ]);
 
+        if ($request->has('feeds')) {
+            $feedData = $request->feeds;
+            $existingIds = [];
 
-        $this->updateTotalMortality($daily->cycle->id);
+            foreach ($feedData as $feed) {
+
+                $consumption = $daily->feedConsumptions()->updateOrCreate(
+                    ['id' => $feed['id']],
+                    [
+                        'feed_type' => $feed['type'],
+                        'bag_count' => fa2la($feed['bags']),
+                    ]
+                );
+                $existingIds[] = $consumption->id;
+            }
+
+            $daily->feedConsumptions()->whereNotIn('id', $existingIds)->delete();
+        }
+        $this->updateTotalMortality($daily->breeding_cycle_id);
 
         return response()->json([
             'res' => 10,

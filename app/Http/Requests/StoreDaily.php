@@ -22,21 +22,39 @@ class StoreDaily extends FormRequest
     public function rules(): array
     {
         return [
-            'mortality' =>  'required|numeric|min:0',
-            'feed' =>  'required|numeric|min:1',
-            'actions' =>   ['nullable', 'string'],
-            'desc' =>   ['nullable', 'string'],
-        ];
+            // اعتبارسنجی فیلدهای اصلی گزارش
+            'mortality' => 'required|numeric|min:0',
+            'actions'   => 'nullable|string',
+            'desc'      => 'nullable|string',
 
+
+            'feeds'         => 'nullable|array',
+            'feeds.*.type'  => 'required_with:feeds|string',
+            'feeds.*.bags'  => 'required_with:feeds|numeric|min:1',
+        ];
     }
 
     public function messages()
     {
         return [
-            'mortality.required' => 'تعداد تلفات رو وارد نمایید',
-            'mortality.numeric' => 'تعداد تلفات باید به صورت عددی وارد شود',
-            'feed.required' => 'تعداد دان مصرفی رو وارد نمایید',
-            'feed.numeric' => 'تعداد دان مصرفی باید به صورت عددی وارد شود',
+            'mortality.required' => 'تعداد تلفات را وارد نمایید.',
+            'mortality.numeric'  => 'تعداد تلفات باید به صورت عددی وارد شود.',
+
+
+            'feeds.*.type.required_with' => 'نوع دان برای یکی از ردیف‌ها انتخاب نشده است.',
+            'feeds.*.bags.required_with' => 'تعداد کیسه برای یکی از ردیف‌ها وارد نشده است.',
+            'feeds.*.bags.numeric'     => 'تعداد کیسه باید به صورت عددی وارد شود.',
+            'feeds.*.bags.min'         => 'تعداد کیسه باید حداقل ۱ باشد.',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+
+        if ($this->has('feeds') && is_string($this->feeds)) {
+            $this->merge([
+                'feeds' => json_decode($this->feeds, true) ?? []
+            ]);
+        }
     }
 }

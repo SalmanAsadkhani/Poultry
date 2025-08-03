@@ -53,14 +53,17 @@ class Helpers{
     }
 
 
+
     public static function excelToArray($Filepath){
 
         include_once __DIR__."/excel/export.php";
         return excelToArray($Filepath);
     }
+
     public static function checkFileAjax($request,$fieldName,$path,$size=10){
         if(!$request->hasFile($fieldName))
             return ['res'=>1,'mySuccess'=>'','myAlert'=>' یک فایل انتخاب نمایید'];
+
         $file = Helpers::checkAndSaveFile($request->$fieldName ,$path,'all',$size*1024);
         if(!is_array($file))
             return ['res'=>1,'mySuccess'=>'','myAlert'=>'لطفا یک فایل انتخاب نمایید.'];
@@ -121,6 +124,7 @@ class Helpers{
         }else
             return 'notFileFound';
     }
+
     public static function checkAndSaveImagePdf($request,$fieldName,$path,$maxSize=500,$oldImageName=null){
         if($request->hasFile($fieldName)){
 

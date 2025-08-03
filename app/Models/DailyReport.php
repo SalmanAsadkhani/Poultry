@@ -33,6 +33,10 @@ class DailyReport extends Model
         return \verta($value)->format('Y/m/d');
     }
 
+    public function feedConsumptions()
+    {
+        return $this->hasMany(FeedConsumption::class);
+    }
 
 }
 

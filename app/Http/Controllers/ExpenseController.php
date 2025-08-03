@@ -23,6 +23,7 @@ class ExpenseController extends Controller
 {
     public function index() : View
     {
+
         $cycles = BreedingCycle::with([
             'feedCategories',
             'drugCategories',

@@ -6,39 +6,66 @@
 
     <script>
         $(document).ready(function() {
-            $('.save-report').on('click', function (e) {
+
+            $(document).on('click', '.add-feed-row', function() {
+                const button = $(this);
+                const reportId = button.data('report-id');
+                const wrapper = button.prev('.feed-consumption-wrapper');
+                const newIndex = 'new_' + Date.now();
+
+                const newRowHtml = `
+                <div class="row feed-consumption-row mb-2">
+                    <div class="col">
+                        <select name="feeds[${reportId}][${newIndex}][type]" class="form-select form-select-sm" style="display: block">
+                            <option value="استارتر">استارتر</option>
+                            <option value="پیش دان">پیش دان</option>
+                            <option value="میان دان">میان دان</option>
+                            <option value="پس دان">پس دان</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="number" name="feeds[${reportId}][${newIndex}][bags]" class="form-control form-control-sm" placeholder="تعداد">
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-danger remove-feed-row btn-extra-sm">حذف</button>
+                    </div>
+                </div>
+            `;
+                wrapper.append(newRowHtml);
+            });
+
+            $(document).on('click', '.remove-feed-row', function() {
+                $(this).closest('.feed-consumption-row').remove();
+            });
+
+
+            $(document).on('click', '.save-report', function (e) {
                 e.preventDefault();
 
                 const button = $(this);
                 const id = button.data('id');
-
-                let mortality, actions, desc  ,feed_type, feed;
-
-                if (button.closest('tr').length) {
-                    const row = button.closest('tr');
-                    mortality = row.find(`input[name="mortality[${id}]"]`).val();
-                    feed_type = row.find(`select[name="feed_type[${id}]"]`).val();
-                    feed = row.find(`input[name="feed[${id}]"]`).val();
-                    actions = row.find(`input[name="actions[${id}]"]`).val();
-                    desc = row.find(`input[name="desc[${id}]"]`).val();
-                } else {
-                    const card = button.closest('.card-body');
-                    mortality = card.find(`input[name="mortality_mobile[${id}]"]`).val();
-                    feed_type = card.find(`select[name="feed_type_mobile[${id}]"]`).val();
-                    feed = card.find(`input[name="feed_mobile[${id}]"]`).val();
-                    actions = card.find(`input[name="actions_mobile[${id}]"]`).val();
-                    desc = card.find(`input[name="desc_mobile[${id}]"]`).val();
-                }
-
+                const container = button.closest('tr').length ? button.closest('tr') : button.closest('.card-body');
 
                 const formData = new FormData();
-                formData.append('mortality', mortality);
-                formData.append('feed_type', feed_type);
-                formData.append('feed', feed);
-                formData.append('actions', actions);
-                formData.append('desc', desc);
+                formData.append('mortality', container.find('input[name*="mortality"]').val());
+                formData.append('actions', container.find('input[name*="actions"]').val());
+                formData.append('desc', container.find('input[name*="desc"]').val());
                 formData.append('_token', '{{ csrf_token() }}');
                 formData.append('daily_id', id);
+
+                // ✨ تغییر اصلی اینجاست: جمع‌آوری داده‌های دان به صورت آرایه
+                const feedConsumptions = [];
+                container.find('.feed-consumption-row:visible').each(function() {
+                    const row = $(this);
+                    const type = row.find('select[name*="[type]"]').val();
+                    const bags = row.find('input[name*="[bags]"]').val();
+                    const consumptionId = row.find('input[name*="[id]"]').val();
+                    if (type && bags) {
+                        feedConsumptions.push({ id: consumptionId || null, type: type, bags: bags });
+                    }
+                });
+                // ✨ تبدیل آرایه به رشته JSON و ارسال آن
+                formData.append('feeds', JSON.stringify(feedConsumptions));
 
                 let url = "{{ route('daily.confirm', ':id') }}";
                 url = url.replace(':id', id);
@@ -49,31 +76,21 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    headers: {
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'Accept': 'application/json' },
                     success: function (result) {
                         if (result.res === 10) {
                             toastr.success(result.mySuccess);
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
+                            setTimeout(() => { location.reload(); }, 1500);
                         } else {
                             toastr.error(result.myAlert);
                         }
                     },
                     error: function (xhr) {
-
                         let err = 'خطایی در ارسال داده‌ها رخ داد';
-
                         if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-
                             err = Object.values(xhr.responseJSON.errors).join(' - ');
-
                         } else if (xhr.responseJSON?.myAlert) {
-
                             err = xhr.responseJSON.myAlert;
-
                         }
                         toastr.error(err);
                     }
@@ -81,6 +98,8 @@
             });
         });
     </script>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -151,7 +170,7 @@
                             <div class="card-body">
                                 <h6 class="text-muted mb-4"> جمع تلفات کل</h6>
 
-                                <h4 class="fw-bold text-primary">{{ sep($cycle->total_mortality) }} تلفات</h4>
+                                <h4 Class="fw-bold text-primary">{{ sep($cycle->total_mortality) }} تلفات</h4>
                             </div>
                         </div>
                     </div>
@@ -171,7 +190,7 @@
                                 <div class="card-body">
                                         <h6 class="text-muted mb-4"> خلاصه مصرف دان</h6>
                                     @foreach($feedSummary as $summary)
-                                       <div >
+                                       <div>
                                            <h5  class="fw-bold text-primary mb-2">{{ $summary['name'] }}:</h5>
                                            <h6  class="fw-bold text-secondary mb-4">{{ sep($summary['total_weight_used']) }} کیلوگرم
                                                <small>(از {{ $summary['bags_used'] }} کیسه)</small>
@@ -196,6 +215,7 @@
                                 <button id="scrollToTodayBtn" class="btn btn-sm btn-info mb-3">پرش به گزارش امروز</button>
                             </div>
                             <x-responsive-display>
+
                                 <x-slot:desktop>
                                     <div class="table-responsive">
                                         <table id="tableExport" class="display table table-hover table-checkable order-column width-per-100">
@@ -206,45 +226,24 @@
                                                 <th class="center">تلفات</th>
                                                 <th class="center">جمع تلفات</th>
                                                 <th class="center">داروی مصرفی و واکسن</th>
-                                                <th class="center">دان</th>
-                                                <th class="center">تعداد دان مصرفی <small>(کیسه)</small></th>
+                                                <th class="center">دان مصرفی <small>(نوع و تعداد کیسه)</small></th>
                                                 <th class="center">ملاحضات</th>
                                                 <th class="center">جزییات</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             @foreach($cycle->dailyReports as $report)
-                                                <tr  @if($loop->last)  class="last-report-row" @endif>
-
-
+                                                <tr @if($loop->last) class="last-report-row" @endif>
                                                     <td>{{ $report->days_number }}</td>
-
-                                                    <td>{{ $report->daily_date}}</td>
-
+                                                    <td>{{ $report->daily_date }}</td>
                                                     <td><input name="mortality[{{ $report->id }}]" value="{{ $report->mortality_count }}"></td>
-
-                                                    <td>{{ $report->total_mortality}}</td>
-
+                                                    <td>{{ $report->total_mortality }}</td>
                                                     <td><input name="actions[{{ $report->id }}]" value="{{ $report->actions_taken }}"></td>
 
                                                     <td>
-                                                        <select name="feed_type[{{ $report->id }}]" class="form-select" style="display: block">
-                                                            @php
-                                                                $feedTypes = ['استارتر', 'پیش دان', 'میان دان', 'پس دان'];
-                                                            @endphp
-
-                                                            @foreach($feedTypes as $type)
-                                                                <option value="{{ $type }}" @if($report->feed_type == $type) selected @endif>
-                                                                    {{ $type }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                        @include('partials.feed_consumption_form' , ['report' => $report])
                                                     </td>
-
-                                                    <td><input name="feed[{{ $report->id }}]" value="{{ $report->feed_count }}"></td>
-
                                                     <td><input name="desc[{{ $report->id }}]" value="{{ $report->description }}"></td>
-
                                                     <td><button class="btn btn-primary save-report" data-id="{{ $report->id }}">ثبت</button></td>
                                                 </tr>
                                             @endforeach
@@ -252,7 +251,6 @@
                                         </table>
                                     </div>
                                 </x-slot:desktop>
-
 
                                 <x-slot:mobile>
 
@@ -282,28 +280,11 @@
                                                         <input class="form-control" name="actions_mobile[{{ $report->id }}]" value="{{ $report->actions_taken }}">
                                                     </div>
 
-                                                     <div class="form-group">
-                                                        <label class="bold text-danger">نوع دان:</label>
-
-                                                         <select name="feed_type_mobile[{{ $report->id }}]" class="form-select" style="display: block">
-                                                             @php
-                                                                 $feedTypes = ['استارتر', 'پیش دان', 'میان دان', 'پس دان'];
-                                                             @endphp
-
-                                                             @foreach($feedTypes as $type)
-                                                                 <option value="{{ $type }}" @if($report->feed_type == $type) selected @endif>
-                                                                     {{ $type }}
-                                                                 </option>
-                                                             @endforeach
-                                                         </select>
-                                                    </div>
-
-                                                    <div class="bold text-danger mb-5">دان:
-                                                        <span class="text-dark">{{ $report->feed_type }}</span>
-                                                    </div>
-
-                                                    <div class="text-danger mt-2 mb-3 ">  تعداد دان مصرفی  <small class="text-dark">(کیسه)</small>:
-                                                        <input class="form-control" name="feed_mobile[{{ $report->id }}]" value="{{ $report->feed_count }}">
+                                                    <div class="form-group">
+                                                        <label class="bold text-danger">دان مصرفی:</label>
+                                                        <div class="mt-2">
+                                                            @include('partials.feed_consumption_form', ['report' => $report])
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
