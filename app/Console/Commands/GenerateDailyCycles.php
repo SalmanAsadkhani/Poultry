@@ -31,7 +31,7 @@ class GenerateDailyCycles extends Command
 
     public function handle()
     {
-        $activeCycles = BreedingCycle::where('status', 1)->whereNull('end_date')->get();
+        $activeCycles = BreedingCycle::with('dailyReports')->where('status', 1)->whereNull('end_date')->get();
 
         $yesterday = Verta::now()->subDay();
 
@@ -51,13 +51,19 @@ class GenerateDailyCycles extends Command
                 continue;
             }
 
-            $feed = $this->getFeedTypeForDay($daysNumber);
 
-            $cycle->dailyReports()->create([
+            $dailyReport = $cycle->dailyReports()->create([
                 'date' => $yesterdayDate,
                 'days_number' => $daysNumber,
-                'feed_type' => $feed,
             ]);
+
+            $FeedType = $this->getFeedTypeForDay($daysNumber);
+
+            $dailyReport->feedConsumptions()->create([
+                'feed_type' => $FeedType,
+                'bag_count' => 0,
+            ]);
+
 
             $this->info("✅ گزارش روز $daysNumber برای دوره {$cycle->id} برای تاریخ $yesterdayString ساخته شد.");
         }
@@ -72,8 +78,8 @@ class GenerateDailyCycles extends Command
     private function getFeedTypeForDay(int $day): string
     {
         return match (true) {
-            $day <= 7 => 'استارتر',
-            $day <= 21 => 'پیش دان',
+            $day <= 10 => 'استارتر',
+            $day <= 25 => 'پیش دان',
             $day <= 35 => 'میان دان',
             default    => 'پس دان',
         };

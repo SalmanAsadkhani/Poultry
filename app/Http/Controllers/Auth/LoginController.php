@@ -18,7 +18,6 @@ class LoginController extends Controller {
 
 
 
-
     public function login(StoreLogin $request)
     {
         try {

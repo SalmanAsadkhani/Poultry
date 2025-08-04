@@ -5,6 +5,7 @@ namespace App\Models;
 use Hekmatinasser\Verta\Facades\Verta;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DailyReport extends Model
 {
@@ -33,7 +34,7 @@ class DailyReport extends Model
         return \verta($value)->format('Y/m/d');
     }
 
-    public function feedConsumptions()
+    public function feedConsumptions(): HasMany
     {
         return $this->hasMany(FeedConsumption::class);
     }

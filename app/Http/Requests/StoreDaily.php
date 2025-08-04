@@ -22,7 +22,7 @@ class StoreDaily extends FormRequest
     public function rules(): array
     {
         return [
-            // اعتبارسنجی فیلدهای اصلی گزارش
+
             'mortality' => 'required|numeric|min:0',
             'actions'   => 'nullable|string',
             'desc'      => 'nullable|string',

@@ -53,7 +53,7 @@
                 formData.append('_token', '{{ csrf_token() }}');
                 formData.append('daily_id', id);
 
-                // ✨ تغییر اصلی اینجاست: جمع‌آوری داده‌های دان به صورت آرایه
+
                 const feedConsumptions = [];
                 container.find('.feed-consumption-row:visible').each(function() {
                     const row = $(this);
@@ -64,7 +64,7 @@
                         feedConsumptions.push({ id: consumptionId || null, type: type, bags: bags });
                     }
                 });
-                // ✨ تبدیل آرایه به رشته JSON و ارسال آن
+
                 formData.append('feeds', JSON.stringify(feedConsumptions));
 
                 let url = "{{ route('daily.confirm', ':id') }}";
@@ -227,6 +227,7 @@
                                                 <th class="center">جمع تلفات</th>
                                                 <th class="center">داروی مصرفی و واکسن</th>
                                                 <th class="center">دان مصرفی <small>(نوع و تعداد کیسه)</small></th>
+                                                <th class="center">مقدار دان مصرف شده </th>
                                                 <th class="center">ملاحضات</th>
                                                 <th class="center">جزییات</th>
                                             </tr>
@@ -235,15 +236,23 @@
                                             @foreach($cycle->dailyReports as $report)
                                                 <tr @if($loop->last) class="last-report-row" @endif>
                                                     <td>{{ $report->days_number }}</td>
+
                                                     <td>{{ $report->daily_date }}</td>
+
                                                     <td><input name="mortality[{{ $report->id }}]" value="{{ $report->mortality_count }}"></td>
+
                                                     <td>{{ $report->total_mortality }}</td>
+
                                                     <td><input name="actions[{{ $report->id }}]" value="{{ $report->actions_taken }}"></td>
 
                                                     <td>
                                                         @include('partials.feed_consumption_form' , ['report' => $report])
                                                     </td>
+
+                                                    <td>{{ sep($report->feed_daily_used) }} <small>(کیلوگرم)</small></td>
+
                                                     <td><input name="desc[{{ $report->id }}]" value="{{ $report->description }}"></td>
+
                                                     <td><button class="btn btn-primary save-report" data-id="{{ $report->id }}">ثبت</button></td>
                                                 </tr>
                                             @endforeach
@@ -275,6 +284,7 @@
                                                         <span class="text-dark">{{ $report->total_mortality }}</span>
                                                     </div>
 
+
                                                     <div class="form-group">
                                                         <label class="bold text-danger">داروی مصرفی:</label>
                                                         <input class="form-control" name="actions_mobile[{{ $report->id }}]" value="{{ $report->actions_taken }}">
@@ -285,6 +295,11 @@
                                                         <div class="mt-2">
                                                             @include('partials.feed_consumption_form', ['report' => $report])
                                                         </div>
+                                                    </div>
+
+
+                                                    <div class="bold text-danger mb-5"> مقدار دان مصرف شده
+                                                        <span class="text-dark">{{ $report->feed_daily_used }} <small>(کیلوگرم)</small></span>
                                                     </div>
 
                                                     <div class="form-group">

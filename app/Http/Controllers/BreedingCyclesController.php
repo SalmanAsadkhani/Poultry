@@ -48,62 +48,34 @@ class BreedingCyclesController extends Controller
     }
 
 
+
     public function show($id)
     {
         $cycle = BreedingCycle::with([
-            'dailyReports' => fn($query) => $query->orderBy('date', 'asc')
+            'dailyReports.feedConsumptions',
+            'feeds'
         ])
             ->withSum('dailyReports as total_mortality', 'mortality_count')
             ->findOrFail($id);
 
-
-        $startDate = Verta::parse($cycle->start_date);
-        $chickAge = $startDate->diffDays(Verta::now()) + 1;
-
-        $feedPurchases = $cycle->feeds()
-            ->select('name', DB::raw('SUM(quantity) as total_weight'), DB::raw('SUM(bag_count) as total_bags'))
-            ->groupBy('name')
-            ->get()
-            ->keyBy('name');
+        $feedAnalytics = $cycle->getFeedConsumptionAnalytics();
 
 
-        $allConsumptions = $cycle->dailyReports()->with('feedConsumptions')->get()->pluck('feedConsumptions')->flatten();
-
-        $consumptionsByType = $allConsumptions->groupBy('feed_type');
-
-        $feedSummary = [];
-        $grandTotalWeight = 0;
+        $chickAge = Verta::parse($cycle->start_date)->diffDays(Verta::now()) + 1;
 
 
-        foreach ($consumptionsByType as $feedName => $consumptions) {
-            $purchase = $feedPurchases->get($feedName);
-
-            if ($purchase && $purchase->total_bags > 0) {
-                $avgWeightPerBag = $purchase->total_weight / $purchase->total_bags;
-                $bagsUsed = $consumptions->sum('bag_count');
-                $totalWeightConsumed = $bagsUsed * $avgWeightPerBag;
-
-                $feedSummary[] = [
-                    'name' => $feedName,
-                    'total_weight_used' => round($totalWeightConsumed),
-                    'bags_used' => $bagsUsed,
-                ];
-                $grandTotalWeight += round($totalWeightConsumed);
-            }
-        }
-
-        return view('breeding.show', compact(
-            'cycle',
-            'chickAge',
-            'feedSummary',
-            'grandTotalWeight'
-        ));
+        return view('breeding.show', [
+            'cycle' => $cycle,
+            'chickAge' => $chickAge,
+            'feedSummary' => $feedAnalytics['summary'],
+            'grandTotalWeight' => $feedAnalytics['grand_total_kg'],
+        ]);
     }
 
     public function store(StoreDaily $request)
     {
 
-        $daily = DailyReport::findOrFail($request->daily_id);
+        $daily = DailyReport::find($request->daily_id)->first();
 
         $daily->update([
             'mortality_count' => fa2la($request->mortality),

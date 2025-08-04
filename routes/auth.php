@@ -12,12 +12,5 @@ Route::prefix('login')->group(function () {
     Route::post('', [LoginController::class, 'login'])->name('login')->middleware( 'throttle:5,1');
 });
 
-//Route::prefix('forgot')->group(function () {
-//    Route::get('', [ForgotController::class, 'index'])->name('forgot');
-//    Route::post('', [ForgotController::class, 'checkMobile'])->name('forgot');
-//
-//    Route::get('verify', [ForgotController::class, 'verifyPage'])->name('forgot_verify');
-//    Route::post('verify', [ForgotController::class, 'checkCode'])->name('forgot_verify');
-//});
 
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
