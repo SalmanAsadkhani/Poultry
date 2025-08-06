@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PwaController;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -37,3 +38,5 @@ Route::get('pass_1300' , function (){
 
     return redirect('login');
 });
+
+Route::get('/service-worker.js', [PwaController::class, 'serviceWorker']);

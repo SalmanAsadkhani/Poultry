@@ -75,7 +75,7 @@ class BreedingCyclesController extends Controller
     public function store(StoreDaily $request)
     {
 
-        $daily = DailyReport::find($request->daily_id)->first();
+        $daily = DailyReport::findOrFail($request->daily_id);
 
         $daily->update([
             'mortality_count' => fa2la($request->mortality),
@@ -83,9 +83,10 @@ class BreedingCyclesController extends Controller
             'actions_taken'   => $request->actions,
         ]);
 
+
         if ($request->has('feeds')) {
             $feedData = $request->feeds;
-            $existingIds = [];
+            $processedIds = [];
 
             foreach ($feedData as $feed) {
 
@@ -96,17 +97,23 @@ class BreedingCyclesController extends Controller
                         'bag_count' => fa2la($feed['bags']),
                     ]
                 );
-                $existingIds[] = $consumption->id;
+
+                $processedIds[] = $consumption->id;
             }
 
-            $daily->feedConsumptions()->whereNotIn('id', $existingIds)->delete();
+
+            $daily->feedConsumptions()->whereNotIn('id', $processedIds)->delete();
+        } else {
+
+            $daily->feedConsumptions()->delete();
         }
+
+
         $this->updateTotalMortality($daily->breeding_cycle_id);
 
         return response()->json([
-            'res' => 10,
+            'res'       => 10,
             'mySuccess' => 'گزارش با موفقیت ثبت گردید',
-            'myAlert' => ""
         ]);
     }
 

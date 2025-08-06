@@ -61,13 +61,13 @@ class BreedingCycle extends Model
             });
 
 
+
         $avgWeights = $summarizedFeeds
             ->where('total_bags', '>', 0)
             ->map(fn($feed) => $feed['total_weight'] / $feed['total_bags']);
 
 
         $allConsumptions = $this->dailyReports->pluck('feedConsumptions')->flatten();
-
 
         $consumptionsByType = $allConsumptions->groupBy(function ($consumption) {
             return trim($consumption->feed_type);

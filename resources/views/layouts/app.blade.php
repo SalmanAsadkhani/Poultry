@@ -45,7 +45,7 @@
             <a href="javascript:void(0);" class="bars"></a>
             <a class="navbar-brand " >
                 <img src="{{url('')}}/assets/images/logo.png" alt="" />
-                    <span class="logo-name">لوراکس</span>
+                    <span class="logo-name"></span>
             </a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">

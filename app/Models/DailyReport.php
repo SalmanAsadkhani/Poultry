@@ -14,10 +14,8 @@ class DailyReport extends Model
         'date',
         'days_number',
         'mortality_count',
-        'feed_count',
         'total_mortality',
         'description',
-        'feed_type',
         'actions_taken',
         'status',
     ];

@@ -1,7 +1,7 @@
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register({{ asset("sw.js") }})
+            navigator.serviceWorker.register({{ asset("service-worker.js") }})
                 .then(registration => {
                     console.log('Service Worker registered successfully: ', registration);
                 })
@@ -41,4 +41,23 @@
             }
         });
     }
+
+
+
+    let refreshing;
+
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+
+        toastr.info('نسخه جدیدی از برنامه در دسترس است، در حال بارگذاری مجدد...');
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+    });
+
 </script>
+
+
+
+
