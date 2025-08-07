@@ -186,11 +186,11 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">نام دارو </label>
-                                    <input type="text" name="name" class="form-control"   placeholder="مثلا: انرژی پلاس" >
+                                    <input type="text" name="name" class="form-control  validate-required" data-error="نام دارو الزامی است"   placeholder="مثلا: انرژی پلاس" >
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">تعداد</label>
-                                    <input type="tel" name="quantity" class="form-control"  placeholder="مثلا: 2"  dir="rtl" >
+                                    <input type="tel" name="quantity" class="form-control  validate-required" data-error=" تعداد دارو الزامی است"  placeholder="مثلا: 2"  dir="rtl" >
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">قیمت واحد  <small>(تومان)</small> </label>
@@ -202,7 +202,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-                                    <button type="submit" class="btn btn-success">ذخیره</button>
+                                    <button type="submit" class="btn btn-success"  data-validate="true">ذخیره</button>
                                 </div>
                             </form>
                         </div>
@@ -228,11 +228,11 @@
 
                                 <div class="mb-3">
                                     <label for="edit-drug-name" class="form-label">نام دارو</label>
-                                    <input type="text" name="name" id="edit-drug-name" class="form-control">
+                                    <input type="text" name="name" id="edit-drug-name" class="form-control validate-required" data-error="نام دارو الزامی است">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-drug-quantity" class="form-label">تعداد</label>
-                                    <input type="tel" name="quantity" id="edit-drug-quantity" class="form-control" dir="rtl">
+                                    <input type="tel" name="quantity" id="edit-drug-quantity" class="form-control validate-required" data-error=" فیلد تعداد الزامی است" dir="rtl">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-drug-price" class="form-label">قیمت واحد<small>(تومان)</small></label>
@@ -244,7 +244,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-                                    <button type="submit" class="btn btn-success">ذخیره</button>
+                                    <button type="submit" class="btn btn-success"  data-validate="true">ذخیره</button>
                                 </div>
                             </form>
                         </div>

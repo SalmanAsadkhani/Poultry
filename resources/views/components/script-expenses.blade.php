@@ -2,73 +2,80 @@
     document.addEventListener('DOMContentLoaded', function () {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        function handleExpenseFormSubmit(formId) {
-            const form = document.getElementById(formId);
-            if (!form) {
-                return;
-            }
+        function handleExpenseStoreModal(modalId) {
+            const modalEl = document.getElementById(modalId);
+            if (!modalEl) return;
 
-            const modalEl = form.closest('.modal');
+
+            const form = modalEl.querySelector('form');
             const errorBox = document.createElement('div');
             errorBox.className = 'alert alert-danger mt-2';
             errorBox.style.display = 'none';
             form.prepend(errorBox);
+
 
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 errorBox.style.display = 'none';
                 errorBox.innerHTML = '';
 
+                form.action = "{{ route('expenses.store') }}"
                 const formData = new FormData(form);
 
-                fetch("{{ route('expenses.store') }}", {
+                $.ajax({
+                    url: form.action,
                     method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
                         'Accept': 'application/json'
                     },
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(result => {
+                    success: function(result) {
+
                         if (result.res === 10) {
                             toastr.success(result.mySuccess);
+                            bootstrap.Modal.getInstance(modalEl).hide();
+                            form.reset();
                             setTimeout(() => {
                                 location.reload();
                             }, 1500);
-
-
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                        } else if (result.errors) {
-
-                            let errorList = '<ul>';
-                            for (const key in result.errors) {
-                                result.errors[key].forEach(err => {
-                                    errorList += `<li>${err}</li>`;
-                                });
-                            }
-                            errorList += '</ul>';
-                            errorBox.innerHTML = errorList;
-                            errorBox.style.display = 'block';
                         } else {
-
                             errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
                             errorBox.style.display = 'block';
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        errorBox.innerHTML = '<ul><li>خطایی در ارتباط با سرور رخ داد.</li></ul>';
-                        errorBox.style.display = 'block';
-                    });
+                    },
+                    error: function(xhr) {
+
+                        if (!navigator.onLine) {
+                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
+                            bootstrap.Modal.getInstance(modalEl).hide();
+                            form.reset();
+                        }
+                        else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                            let list = '<ul>';
+                            Object.values(xhr.responseJSON.errors).forEach(errs =>
+                                errs.forEach(err => list += `<li>${err}</li>`)
+                            );
+                            list += '</ul>';
+                            errorBox.innerHTML = list;
+                            errorBox.style.display = 'block';
+                        }
+                        else {
+                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
+                            errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
+                            errorBox.style.display = 'block';
+                        }
+                    }
+                });
             });
         }
 
 
-        handleExpenseFormSubmit('StoreFeedForm');
-        handleExpenseFormSubmit('StoreDrugForm');
-        handleExpenseFormSubmit('StoreMiscForm');
+        handleExpenseStoreModal('StoreFeedModal');
+        handleExpenseStoreModal('StoreDrugModal');
+        handleExpenseStoreModal('StoreMiscModal');
 
 
     });
@@ -93,8 +100,8 @@
                 const button = event.relatedTarget;
 
 
-                let actionUrl = "{{ route('expenses.update', ':id') }}".replace(':id', button.dataset.id);
-                form.setAttribute('action', actionUrl);
+                form.action = "{{ route('expenses.update', ':id') }}".replace(':id', button.dataset.id);
+
 
 
                 form.querySelector('input[name="id"]')?.setAttribute('value', button.dataset.id);
@@ -113,40 +120,55 @@
 
                 const formData = new FormData(form);
 
-                fetch(form.getAttribute('action'), {
+                $.ajax({
+                    url: form.action,
                     method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken,
+                        'X-CSRF-TOKEN':csrfToken,
                         'Accept': 'application/json'
                     },
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(result => {
+                    success: function(result) {
+
                         if (result.res === 10) {
                             toastr.success(result.mySuccess);
-                            setTimeout(() => { location.reload(); }, 1500);
                             bootstrap.Modal.getInstance(modalEl).hide();
-                        } else if (result.errors) {
-
-                            let errorList = '<ul>';
-                            for (const key in result.errors) {
-                                result.errors[key].forEach(err => errorList += `<li>${err}</li>`);
-                            }
-                            errorList += '</ul>';
-                            errorBox.innerHTML = errorList;
-                            errorBox.style.display = 'block';
+                            form.reset();
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
                         } else {
-
                             errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
                             errorBox.style.display = 'block';
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        errorBox.innerHTML = '<ul><li>خطایی در ارتباط با سرور رخ داد.</li></ul>';
-                        errorBox.style.display = 'block';
-                    });
+                    },
+                    error: function(xhr) {
+
+                        if (!navigator.onLine) {
+                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
+                            bootstrap.Modal.getInstance(modalEl).hide();
+                            form.reset();
+                        }
+
+                        else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                            let list = '<ul>';
+                            Object.values(xhr.responseJSON.errors).forEach(errs =>
+                                errs.forEach(err => list += `<li>${err}</li>`)
+                            );
+                            list += '</ul>';
+                            errorBox.innerHTML = list;
+                            errorBox.style.display = 'block';
+                        }
+
+                        else {
+                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
+                            errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
+                            errorBox.style.display = 'block';
+                        }
+                    }
+                });
             });
         }
 
@@ -183,23 +205,35 @@
              e.preventDefault();
              const formData = new FormData(form);
 
-             fetch(form.action, {
+             $.ajax({
+                 url: form.action,
                  method: 'POST',
+                 data: formData,
+                 processData: false,
+                 contentType: false,
                  headers: {
-                     'X-CSRF-TOKEN': csrfToken,
+                     'X-CSRF-TOKEN':csrfToken,
                      'Accept': 'application/json'
                  },
-                 body: formData
-             })
-                 .then(response => response.json())
-                 .then(result => {
+                 success: function(result) {
+
                      if (result.res === 10) {
                          toastr.success(result.mySuccess);
                          setTimeout(() => { location.reload(); }, 1500);
-                     } else {
-                         toastr.error(result.myAlert || 'خطایی در حذف رخ داد.');
                      }
-                 });
+                 },
+                 error: function(xhr) {
+
+                     if (!navigator.onLine) {
+                         toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
+                         bootstrap.Modal.getInstance(modalEl).hide();
+                         form.reset();
+                     }
+
+                     toastr.error(result.myAlert || 'خطایی در حذف رخ داد.');
+
+                 }
+             });
          });
      }
 

@@ -26,37 +26,55 @@
                 errorBox.innerHTML = '';
                 errorBox.style.display = 'none';
 
-                fetch("{{route('Invoice.store')}}", {
+                $.ajax({
+                    url: "{{ route('Invoice.store') }}",
                     method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name=\"_token\"]').value,
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
                         'Accept': 'application/json'
                     },
-                    body: formData
-                }).then(response => {
-                    if (response.status === 422) {
-                        return response.json().then(data => {
+                    success: function(result) {
+
+                        if (result.res === 10) {
+                            toastr.success(result.mySuccess);
+                            bootstrap.Modal.getInstance(modalEl).hide();
+                            form.reset();
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
+                            errorBox.style.display = 'block';
+                        }
+                    },
+                    error: function(xhr) {
+
+                        if (!navigator.onLine) {
+                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
+                            setTimeout( ()=>{
+                                location.reload();
+                            },2000 );
+                        }
+
+                        else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
                             let list = '<ul>';
-                            Object.values(data.errors).forEach(errs =>
+                            Object.values(xhr.responseJSON.errors).forEach(errs =>
                                 errs.forEach(err => list += `<li>${err}</li>`)
                             );
                             list += '</ul>';
                             errorBox.innerHTML = list;
                             errorBox.style.display = 'block';
-                        });
-                    }
+                        }
 
-                    return response.json().then(result => {
-                        if (result.res === 10) {
-
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                            location.reload();
-                        } else {
-                            errorBox.innerHTML = `<ul><li>${result.myAlert}</li></ul>`;
+                        else {
+                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
+                            errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
                             errorBox.style.display = 'block';
                         }
-                    });
+                    }
                 });
             });
         });
@@ -160,7 +178,7 @@
                     <x-validation-error/>
 
 
-                    <form id="Invoice" action="{{ route('Invoice.store') }}" method="post">
+                    <form id="Invoice" action="{{ route('Invoice.store') }}" method="post" novalidate="novalidate">
                         @csrf
                         <div class="mb-3">
                             <label for="cycle" class="form-label">انتخاب دوره:</label>
@@ -184,7 +202,7 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">نام دسته‌بندی:</label>
-                            <input name="NameInvoice" type="text" class="form-control" id="name" placeholder="مثلاً: صورتحساب دان">
+                            <input name="NameInvoice" type="text" class="form-control validate-required" id="name" placeholder="مثلاً: صورتحساب دان"  data-error-message="نام صورتحساب الزامی است ">
                         </div>
                     </form>
 
@@ -192,7 +210,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-                    <button type="submit" form="Invoice" class="btn btn-success">ذخیره </button>
+                    <button type="submit" form="Invoice" class="btn btn-success" data-validate="true">ذخیره </button>
                 </div>
             </div>
         </div>

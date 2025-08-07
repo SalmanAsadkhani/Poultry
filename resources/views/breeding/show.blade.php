@@ -86,13 +86,25 @@
                         }
                     },
                     error: function (xhr) {
-                        let err = 'خطایی در ارسال داده‌ها رخ داد';
-                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            err = Object.values(xhr.responseJSON.errors).join(' - ');
-                        } else if (xhr.responseJSON?.myAlert) {
-                            err = xhr.responseJSON.myAlert;
+                        if (!navigator.onLine) {
+
+                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت به صورت خودکار ارسال خواهد شد.');
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 5000);
+
+                        } else {
+
+
+                            let err = 'خطایی در ارسال داده‌ها رخ داد';
+                            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                                err = Object.values(xhr.responseJSON.errors).join(' - ');
+                            } else if (xhr.responseJSON?.myAlert) {
+                                err = xhr.responseJSON.myAlert;
+                            }
+                            toastr.error(err);
                         }
-                        toastr.error(err);
                     }
                 });
             });
@@ -239,11 +251,11 @@
 
                                                     <td>{{ $report->daily_date }}</td>
 
-                                                    <td><input name="mortality[{{ $report->id }}]" value="{{ $report->mortality_count }}"></td>
+                                                    <td><input name="mortality[{{ $report->id }}]" class="validate-required" value="{{ $report->mortality_count }}"  data-error-message="تعداد تلفات را وارد نمایید"></td>
 
                                                     <td>{{ $report->total_mortality }}</td>
 
-                                                    <td><input name="actions[{{ $report->id }}]" value="{{ $report->actions_taken }}"></td>
+                                                    <td><input name="actions[{{ $report->id }}]" value="{{ $report->actions_taken }}" ></td>
 
                                                     <td>
                                                         @include('partials.feed_consumption_form' , ['report' => $report])
@@ -251,9 +263,9 @@
 
                                                     <td>{{ sep($report->feed_daily_used) }} <small>(کیلوگرم)</small></td>
 
-                                                    <td><input name="desc[{{ $report->id }}]" value="{{ $report->description }}"></td>
+                                                    <td><input name="desc[{{ $report->id }}]"  value="{{ $report->description }}"></td>
 
-                                                    <td><button class="btn btn-primary save-report" data-id="{{ $report->id }}">ثبت</button></td>
+                                                    <td><button class="btn btn-primary save-report "  data-validate="true"  data-id="{{ $report->id }}">ثبت</button></td>
                                                 </tr>
                                             @endforeach
                                             </tbody>

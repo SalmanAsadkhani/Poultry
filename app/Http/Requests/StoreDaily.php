@@ -40,7 +40,6 @@ class StoreDaily extends FormRequest
             'mortality.required' => 'تعداد تلفات را وارد نمایید.',
             'mortality.numeric'  => 'تعداد تلفات باید به صورت عددی وارد شود.',
 
-
             'feeds.*.type.required_with' => 'نوع دان برای یکی از ردیف‌ها انتخاب نشده است.',
             'feeds.*.bags.required_with' => 'تعداد کیسه برای یکی از ردیف‌ها وارد نشده است.',
             'feeds.*.bags.numeric'     => 'تعداد کیسه باید به صورت عددی وارد شود.',

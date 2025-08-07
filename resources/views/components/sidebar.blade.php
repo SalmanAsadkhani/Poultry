@@ -8,7 +8,6 @@
                     <div class="user-panel">
                         <div class="image align-items-center align-content-center">
                             <img src="{{url('')}}/assets/images/a-cartoon-chicken.jpg" class="img-circle user-img-circle" alt="User Image" />
-                            <button id="installButton" style="display: none;" class="btn btn-sm btn-primary mt-3" >نصب اپلیکیشن</button>
                         </div>
                     </div>
                 </li>

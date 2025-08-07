@@ -47,8 +47,6 @@ class BreedingCyclesController extends Controller
 
     }
 
-
-
     public function show($id)
     {
         $cycle = BreedingCycle::with([

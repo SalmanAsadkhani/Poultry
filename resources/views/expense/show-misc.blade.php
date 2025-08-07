@@ -188,11 +188,11 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">نام </label>
-                                    <input type="text" name="name" class="form-control" placeholder="مثلا : مجوزجوجه ریزی" >
+                                    <input type="text" name="name" class="form-control   validate-required" data-error=" فیلد نام الزامی است" placeholder="مثلا : مجوزجوجه ریزی" >
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">تعداد</label>
-                                    <input type="tel" name="quantity" class="form-control"  placeholder="مثلا :1" dir="rtl" >
+                                    <input type="tel" name="quantity" class="form-control   validate-required" data-error="فیلد تعداد الزامی است" placeholder="مثلا :1" dir="rtl" >
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">قیمت واحد</label>
@@ -204,7 +204,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-                                    <button type="submit" class="btn btn-success">ذخیره</button>
+                                    <button type="submit" class="btn btn-success" data-validate="true">ذخیره</button>
                                 </div>
                             </form>
                         </div>
@@ -230,11 +230,11 @@
 
                                 <div class="mb-3">
                                     <label for="edit-misc-name" class="form-label">نام</label>
-                                    <input type="text" name="name" id="edit-misc-name" class="form-control" value="{{$expense->name ?? ''}}">
+                                    <input type="text" name="name" id="edit-misc-name" class="form-control validate-required" data-error="فیلد نام الزامی است" value="{{$expense->name ?? ''}}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-misc-quantity" class="form-label">تعداد</label>
-                                    <input type="tel" name="quantity" id="edit-misc-quantity" class="form-control" value="{{$expense->quantity ?? ''}}" dir="rtl">
+                                    <input type="tel" name="quantity" id="edit-misc-quantity" class="form-control   validate-required" data-error="فیلد تعداد الزامی است" value="{{$expense->quantity ?? ''}}" dir="rtl">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-misc-unit_price" class="form-label">قیمت واحد <small>(تومان)</small></label>
@@ -246,7 +246,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-                                    <button type="submit" class="btn btn-success">ذخیره</button>
+                                    <button type="submit" class="btn btn-success" data-validate="true" >ذخیره</button>
                                 </div>
                             </form>
                         </div>

@@ -8,8 +8,6 @@ use App\Http\Requests\StoreExpenseRequest;
 use App\Models\BreedingCycle;
 use App\Models\Drug;
 use App\Models\DrugCategory;
-use App\Models\Expense;
-use App\Models\ExpenseCategory;
 use App\Models\Feed;
 use App\Models\FeedCategory;
 use App\Models\Miscellaneous;
@@ -49,7 +47,7 @@ class ExpenseController extends Controller
         ]);
 
 
-        return response()->json(['res' => 10]);
+        return response()->json(['res' => 10 , 'mySuccess' => "{$request->NameInvoice} با موفقیت اضافه گردید"]);
 
     }
 

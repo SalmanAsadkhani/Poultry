@@ -40,5 +40,43 @@
             });
         });
 
+
+        $(document).on('click', '[data-validate="true"], button[type="submit"]', function (e) {
+            let valid = true;
+
+            const scope = $(this).closest('form').length
+                ? $(this).closest('form')
+                : $(this).closest('tr, .card, .box, body');
+
+            const requiredInputs = scope.find('.validate-required');
+
+            requiredInputs.each(function () {
+                const input = $(this);
+                const value = input.val() ? input.val().trim() : '';
+                input.next('.validation-error').remove();
+                if (value === '') {
+                    const message = input.data('error-message') || 'لطفاً این فیلد را پر کنید.';
+                    input.after(`<div class="validation-error text-danger mt-1" style="font-size: 12px;">${message}</div>`);
+                    input.addClass('is-invalid');
+                    valid = false;
+                } else {
+                    input.removeClass('is-invalid');
+                }
+            });
+
+            if (!valid) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+
     });
+
 </script>
+
+<style>
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+</style>

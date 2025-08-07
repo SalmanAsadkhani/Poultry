@@ -10,7 +10,7 @@
                 </select>
             </div>
             <div class="col">
-                <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][{{ $loop->index }}][bags]" class="form-control form-control-sm" placeholder="تعداد" value="{{ $consumption->bag_count }}">
+                <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][{{ $loop->index }}][bags]" class="form-control form-control-sm validate-required" placeholder="تعداد" value="{{ $consumption->bag_count }}" min="1"  data-error-message="تعداد کیسه باید حداقل ۱ باشد.">
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger remove-feed-row btn-extra-sm">حذف</button>
@@ -26,7 +26,7 @@
                 </select>
             </div>
             <div class="col">
-                <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][0][bags]" class="form-control form-control-sm" placeholder="تعداد">
+                <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][0][bags]" class="form-control form-control-sm validate-required" placeholder="تعداد"  data-error-message="تعداد کیسه باید حداقل ۱ باشد.">
             </div>
             <div class="col-auto"></div>
         </div>

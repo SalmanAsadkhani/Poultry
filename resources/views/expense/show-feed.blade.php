@@ -195,16 +195,16 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">عنوان </label>
-                                    <input type="text" name="name" class="form-control" placeholder="مثلا: استارتر" >
+                                    <input type="text" name="name" class="form-control  validate-required" data-error="نوع دان الزامی است" placeholder="مثلا: استارتر" >
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">وزن   <small>(کیلوگرم)</small></label>
-                                    <input type="tel" name="quantity" class="form-control"   placeholder="مثلا: 2000" dir="rtl">
+                                    <input type="tel" name="quantity" class="form-control validate-required" data-error="وزن دان الزامی است"  placeholder="مثلا: 2000" dir="rtl">
                                 </div>
 
                                   <div class="mb-3">
                                       <label class="form-label">تعداد کیسه </label>
-                                    <input type="tel" name="bag_count" class="form-control" placeholder="مثلا: 50" dir="rtl">
+                                    <input type="tel" name="bag_count" class="form-control  validate-required" data-error="تعداد کیسه الزامی است" placeholder="مثلا: 50" dir="rtl">
                                 </div>
 
                                 <div class="mb-3">
@@ -217,7 +217,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-                                    <button type="submit" class="btn btn-success">ذخیره</button>
+                                    <button type="submit" class="btn btn-success" data-validate="true">ذخیره</button>
                                 </div>
                             </form>
                         </div>
@@ -243,11 +243,11 @@
                                 <div class="mb-3">
                                     <label for="edit-feed-name" class="form-label">نام</label>
 
-                                    <input type="text" name="name" id="edit-feed-name" class="form-control">
+                                    <input type="text" name="name" id="edit-feed-name" class="form-control   validate-required" data-error="نوع دان الزامی است">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-feed-quantity" class="form-label">وزن <small>(کیلوگرم)</small></label>
-                                    <input type="tel" name="quantity" id="edit-feed-quantity" class="form-control" dir="rtl">
+                                    <input type="tel" name="quantity" id="edit-feed-quantity" class="form-control   validate-required" data-error="وزن دان الزامی است" dir="rtl">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-feed-bag_count" class="form-label">تعداد کیسه</label>
@@ -263,7 +263,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-                                    <button type="submit" class="btn btn-success">ذخیره</button>
+                                    <button type="submit" class="btn btn-success" data-validate="true">ذخیره</button>
                                 </div>
                             </form>
                         </div>
