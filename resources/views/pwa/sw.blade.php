@@ -7,7 +7,6 @@ workbox.precaching.cleanupOutdatedCaches();
 
 
 workbox.precaching.precacheAndRoute([
-{ url: '{{ url("/") }}', revision: 'v1.3' },
 { url: '{{ url("/offline.html") }}', revision: 'v1.3' },
 { url: '{{ asset("assets/css/app.min.css") }}', revision: 'v1.3' },
 { url: '{{ asset("assets/js/app.min.js") }}', revision: 'v1.3' },
