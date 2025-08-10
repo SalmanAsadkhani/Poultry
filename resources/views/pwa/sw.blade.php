@@ -1,58 +1,66 @@
-
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js');
 
 if (workbox) {
-console.log(`Workbox is loaded and running.`);
+console.log(`Workbox is loaded`);
+
 workbox.precaching.cleanupOutdatedCaches();
 
+
 workbox.precaching.precacheAndRoute([
-{ url: '{{ url("/offline.html") }}', revision: 'v2.2' },
-{ url: '{{ asset("assets/css/app.min.css") }}', revision: 'v2.2' },
-{ url: '{{ asset("assets/js/app.min.js") }}', revision: 'v2.2' },
-{ url: '{{ asset("assets/images/logo-192.png") }}', revision: 'v2.2' },
+{ url: '{{ url("/") }}', revision: 'v1.3' },
+{ url: '{{ url("/offline.html") }}', revision: 'v1.3' },
+{ url: '{{ asset("assets/css/app.min.css") }}', revision: 'v1.3' },
+{ url: '{{ asset("assets/js/app.min.js") }}', revision: 'v1.3' },
+{ url: '{{ asset("assets/images/logo-192.png") }}', revision: 'v1.3' },
+
 { url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', revision: null },
+{ url: 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js', revision: null },
+{ url: 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js', revision: null },
+{ url: 'https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js', revision: null },
 ]);
 
 
-const pageStrategy = new workbox.strategies.NetworkFirst({
-cacheName: 'pages-cache',
-plugins: [ new workbox.expiration.ExpirationPlugin({ maxEntries: 50 }) ]
-});
 workbox.routing.registerRoute(
 ({ request }) => request.mode === 'navigate',
-async (args) => {
-try {
+new workbox.strategies.NetworkFirst({
+cacheName: 'pages-cache',
+plugins: [
+new workbox.expiration.ExpirationPlugin({ maxEntries: 50 }),
+],
+})
+);
 
-return await pageStrategy.handle(args);
-} catch (error) {
-
-return caches.match('{{ url("/offline.html") }}');
-}
-}
+workbox.routing.registerRoute(
+({ request }) => request.destination === 'style' || request.destination === 'script',
+new workbox.strategies.StaleWhileRevalidate({
+cacheName: 'assets-cache',
+})
 );
 
 
 workbox.routing.registerRoute(
-({ request }) => request.destination === 'style' || request.destination === 'script' || request.destination === 'image',
-new workbox.strategies.StaleWhileRevalidate({ cacheName: 'assets-cache' })
+({ request }) => request.destination === 'image',
+new workbox.strategies.CacheFirst({
+cacheName: 'images-cache',
+plugins: [
+new workbox.expiration.ExpirationPlugin({ maxEntries: 60, maxAgeSeconds: 30 * 24 * 60 * 60 }),
+],
+})
 );
-
 
 
 workbox.loadModule('workbox-background-sync');
-
-const bgSyncPlugin = new workbox.backgroundSync.BackgroundSyncPlugin('offline-form-submissions', {
+const bgSyncPlugin = new workbox.backgroundSync.BackgroundSyncPlugin('api-requests-queue', {
 maxRetentionTime: 24 * 60
 });
 
 workbox.routing.registerRoute(
-
-({ request }) => request.method === 'POST',
+({ request }) => request.method !== 'GET',
 new workbox.strategies.NetworkOnly({
 plugins: [bgSyncPlugin]
 })
 );
 
 } else {
-console.log(`Workbox failed to load.`);
+console.log(`Workbox didn't load`);
 }
