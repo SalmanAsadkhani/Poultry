@@ -189,14 +189,6 @@ if (!function_exists('change_birth')) {
 }
 
 
-
-
-function my_dd($data)
-{
-    echo '<pre>';
-    print_r($data);
-    exit;
-}
 function make_day($day){
     return substr($day,0,4).'/'.substr($day,4,2).'/'.substr($day,6,2);
 }

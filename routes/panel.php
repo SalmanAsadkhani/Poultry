@@ -3,15 +3,18 @@
 
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OfflineController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('panel')->group(function () {
     Route::get('' , [HomeController::class, 'index'])->name('home')->middleware('auth');
+    Route::post('/offline/submit', [OfflineController::class, 'handle'])->name('offline.submit');
+
 });
 
 Route::prefix('panel/breeding')->group(function () {
     Route::get('' , [\App\Http\Controllers\BreedingCyclesController::class, 'index'])->name('breeding.index')->middleware('auth');
-    Route::post('add_breeding' , [\App\Http\Controllers\BreedingCyclesController::class, 'ad d_breeding'])->name('breeding.add')->middleware('auth');
+    Route::post('add_breeding' , [\App\Http\Controllers\BreedingCyclesController::class, 'add_breeding'])->name('breeding.add')->middleware('auth');
     Route::get('{id}/show' , [\App\Http\Controllers\BreedingCyclesController::class, 'show'])->name('breeding.show')->middleware('auth');
     Route::post('{id}/store' , [\App\Http\Controllers\BreedingCyclesController::class, 'store'])->name('daily.confirm')->middleware('auth');
 });

@@ -9,78 +9,63 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('courseForm');
-            const modalEl = document.getElementById('addCycleModal');
+{{--    <script>--}}
+{{--        $(document).ready(function() {--}}
 
-            const errorBox = document.createElement('div');
-            errorBox.className = 'alert alert-danger';
-            errorBox.style.display = 'none';
-            form.prepend(errorBox);
+{{--                const form = $('#courseForm');--}}
+{{--                const modalEl = document.getElementById(modalId);--}}
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
 
-                const formData = new FormData(form);
-                errorBox.innerHTML = '';
-                errorBox.style.display = 'none';
+{{--                if (form.length === 0) {--}}
+{{--                    return;--}}
+{{--                }--}}
+{{--                const errorBox = $('<div class="alert alert-danger mt-2" style="display: none;"></div>');--}}
+{{--                form.prepend(errorBox);--}}
 
-                $.ajax({
-                    url: "{{ route('breeding.add') }}",
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                        'Accept': 'application/json'
-                    },
-                    success: function(result) {
+{{--                form.on('submit', function(e) {--}}
+{{--                    e.preventDefault();--}}
+{{--                    errorBox.hide().html('');--}}
 
-                        if (result.res === 10) {
-                            toastr.success(result.mySuccess);
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
-                        } else {
-                            errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    },
-                    error: function(xhr) {
+{{--                    const formData = new FormData(this);--}}
 
-                        if (!navigator.onLine) {
-                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
-
-                            setTimeout(() => {
-                                location.reload();
-                            }, 2000);
-                        }
-
-                        else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            let list = '<ul>';
-                            Object.values(xhr.responseJSON.errors).forEach(errs =>
-                                errs.forEach(err => list += `<li>${err}</li>`)
-                            );
-                            list += '</ul>';
-                            errorBox.innerHTML = list;
-                            errorBox.style.display = 'block';
-                        }
-
-                        else {
-                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
-                            errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    }
-                });
-            });
-        });
-    </script>
-
+{{--                    $.ajax({--}}
+{{--                        url: form.attr('action'),--}}
+{{--                        method: form.attr('method'),--}}
+{{--                        data: formData,--}}
+{{--                        processData: false,--}}
+{{--                        contentType: false,--}}
+{{--                        headers: {--}}
+{{--                            'X-CSRF-TOKEN': formData.get('_token'),--}}
+{{--                            'Accept': 'application/json'--}}
+{{--                        },--}}
+{{--                        success: function(result) {--}}
+{{--                            if (result.res === 10) {--}}
+{{--                                toastr.success(result.mySuccess);--}}
+{{--                                if (modalEl) bootstrap.Modal.getInstance(modalEl).hide();--}}
+{{--                                form[0].reset();--}}
+{{--                                setTimeout(() => location.reload(), 1500);--}}
+{{--                            } else {--}}
+{{--                                errorBox.html(`<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`).show();--}}
+{{--                            }--}}
+{{--                        },--}}
+{{--                        error: function(xhr) {--}}
+{{--                            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {--}}
+{{--                                let list = '<ul>';--}}
+{{--                                $.each(xhr.responseJSON.errors, function(key, errors) {--}}
+{{--                                    errors.forEach(err => list += `<li>${err}</li>`);--}}
+{{--                                });--}}
+{{--                                list += '</ul>';--}}
+{{--                                errorBox.html(list).show();--}}
+{{--                            }--}}
+{{--                            else {--}}
+{{--                                const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';--}}
+{{--                                errorBox.html(`<ul><li>${errorMessage}</li></ul>`).show();--}}
+{{--                            }--}}
+{{--                        }--}}
+{{--                    });--}}
+{{--                });--}}
+{{--        });--}}
+{{--    </script>--}}
 
 @endsection
 
@@ -219,15 +204,15 @@
 
                         <div class="mb-3">
                             <label for="Name" class="form-label">نام پرورش:</label>
-                            <input name="Name" type="text" class="form-control validate-required" id="Name" placeholder="مثلا: فروردین 1404" value="{{old('Name')}}"  data-error-message=" نام پرورش الزامی می باشد" >
+                            <input name="Name" type="text" class="form-control validate-required" id="Name" placeholder="مثلا: فروردین 1404" value="{{old('Name')}}"  data-error-message=" نام پرورش الزامی می باشد"  data-numeric="true">
                         </div>
                         <div class="mb-3">
                             <label for="Date" class="form-label">تاریخ جوجه‌ریزی:</label>
-                            <input  name="Date" type="text" class="form-control validate-required" id="Date"  placeholder="مثلا:1404/01/01"  value="{{old('Date')}}"  data-error-message="تاریخ جوجه‌ریزی الزامی می باشد">
+                            <input  name="Date" type="text" class="form-control validate-required" id="Date"  placeholder="مثلا:1404/01/01"  value="{{old('Date')}}"  data-error-message="تاریخ جوجه‌ریزی الزامی می باشد" data-numeric="true">
                         </div>
                         <div class="mb-3">
                             <label for="Count" class="form-label">تعداد جوجه:</label>
-                            <input  name="Count" type="tel" class="form-control validate-required " id="Count" min="1" placeholder="مثلا: 150000" value="{{old('Count')}}"  data-error-message="تعداد جوجه الزامی می باشد" dir="rtl">
+                            <input  name="Count" type="tel" class="form-control validate-required " id="Count" min="1" placeholder="مثلا: 150000" value="{{old('Count')}}"  data-error-message="تعداد جوجه الزامی می باشد" dir="rtl" data-numeric="true">
                         </div>
                     </form>
 

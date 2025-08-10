@@ -3,8 +3,8 @@
 @section('title','هزینه‌ها')
 
 @section('js')
-    <x-scriptExpenses/>
 
+    <x-scriptExpenses/>
 
 @endsection
 
@@ -178,7 +178,7 @@
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="StoreDrugForm" method="post">
+                            <form id="StoreDrugForm" method="post" action="{{ route('expenses.store') }}">
                                 @csrf
                                 <input type="hidden" name="type" value="drug">
                                 <input type="hidden" name="category_id" value="{{ $category->id }}">

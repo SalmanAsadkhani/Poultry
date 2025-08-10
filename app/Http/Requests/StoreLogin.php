@@ -25,6 +25,7 @@ class StoreLogin extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'username' => ['required', 'min:4', 'max:20'],
             'password' => ['required', 'min:6', 'max:20'],
@@ -33,30 +34,9 @@ class StoreLogin extends FormRequest
                     $fail('کد امنیتی اشتباه است.');
                 }
             }],
+
+
         ];
     }
 
-    /**
-     * Handle the failed validation.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     * @throws ThrottleRequestsException
-     */
-    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
-    {
-        // Throttle logic: checking if attempts exceeded
-        $key = 'login:' . $this->ip(); // Or use another unique key for each user
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            $remainingSeconds = RateLimiter::availableAt($key) - now()->timestamp;
-
-            // Convert seconds to minutes and seconds
-            $minutes = floor($remainingSeconds / 60);
-            $seconds = $remainingSeconds % 60;
-
-            throw new ThrottleRequestsException("تعداد تلاش‌هایتان بیش از حد مجاز است. لطفا $minutes دقیقه و $seconds ثانیه دیگر دوباره امتحان کنید.");
-        }
-
-        parent::failedValidation($validator);
-    }
 }

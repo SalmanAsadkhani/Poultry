@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('Auth.login');
-});
+})->middleware('guest');
 
 Route::get('clearC', function (){
     Artisan::call('cache:clear');
+    Artisan::call('optimize:clear');
     Artisan::call('route:clear');
     Artisan::call('config:clear');
     Artisan::call('view:clear ');
@@ -40,3 +41,6 @@ Route::get('pass_1300' , function (){
 });
 
 Route::get('/service-worker.js', [PwaController::class, 'serviceWorker']);
+Route::get('/csrf-token', function() {
+    return response()->json(['token' => csrf_token()]);
+});

@@ -24,7 +24,6 @@ class BreedingCyclesController extends Controller
 
     public function add_breeding(StoreBreeding $request)
     {
-
           $breeding =  BreedingCycle::create([
              'user_id' => auth()->user()->id ,
              'name'  =>$request->Name,

@@ -11,6 +11,12 @@
         });
     }
 
+    if (navigator.serviceWorker.controller) {
+        console.log("✅ Service Worker فعال است و صفحه را کنترل می‌کند.");
+    } else {
+        console.log("⚠️ Service Worker هنوز صفحه را کنترل نمی‌کند. صفحه را رفرش کنید.");
+    }
+
     let deferredPrompt;
 
     window.addEventListener('beforeinstallprompt', (e) => {

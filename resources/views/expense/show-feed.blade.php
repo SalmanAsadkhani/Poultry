@@ -186,7 +186,8 @@
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="StoreFeedForm" method="post">
+
+                            <form id="StoreFeedForm" method="post" action="{{ route('expenses.store') }}" >
                                 @csrf
                                 <input type="hidden" name="type" value="feed">
                                 <input type="hidden" name="category_id" value="{{ $category->id }}">

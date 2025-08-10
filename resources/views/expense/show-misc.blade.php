@@ -4,7 +4,6 @@
 
 @section('js')
     <x-scriptExpenses/>
-
 @endsection
 
 @section('main')
@@ -179,7 +178,7 @@
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="StoreMiscForm" method="post">
+                            <form id="StoreMiscForm" method="post" action="{{ route('expenses.store') }}">
                                 @csrf
                                 <input type="hidden" name="type" value="misc">
                                 <input type="hidden" name="category_id" value="{{ $category->id }}">

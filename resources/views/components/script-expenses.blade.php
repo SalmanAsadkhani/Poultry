@@ -48,8 +48,7 @@
                     },
                     error: function(xhr) {
 
-                        if (!navigator.onLine) {
-                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
+                        if (!navigator.onLine || xhr.status === 0) {
                             bootstrap.Modal.getInstance(modalEl).hide();
                             form.reset();
                         }
@@ -146,8 +145,7 @@
                     },
                     error: function(xhr) {
 
-                        if (!navigator.onLine) {
-                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
+                        if (!navigator.onLine || xhr.status === 0) {
                             bootstrap.Modal.getInstance(modalEl).hide();
                             form.reset();
                         }
@@ -224,8 +222,7 @@
                  },
                  error: function(xhr) {
 
-                     if (!navigator.onLine) {
-                         toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
+                     if (!navigator.onLine || xhr.status === 0) {
                          bootstrap.Modal.getInstance(modalEl).hide();
                          form.reset();
                      }

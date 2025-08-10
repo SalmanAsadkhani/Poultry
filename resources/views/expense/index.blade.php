@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','دوره ها')
+@section('title','صورتحساب ها')
 
 @section('css')
 
@@ -9,77 +9,63 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('Invoice');
-            const modalEl = document.getElementById('addInvoiceModal');
+{{--    <script>--}}
+{{--        $(document).ready(function() {--}}
+{{--            const form = $('#Invoice');--}}
+{{--            const modalEl = document.getElementById('addInvoiceModal'); // bootstrap.Modal needs the DOM element--}}
 
-            const errorBox = document.createElement('div');
-            errorBox.className = 'alert alert-danger';
-            errorBox.style.display = 'none';
-            form.prepend(errorBox);
+{{--            if (form.length === 0) {--}}
+{{--                return;--}}
+{{--            }--}}
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
+{{--            const errorBox = $('<div class="alert alert-danger mt-2" style="display: none;"></div>');--}}
+{{--            form.prepend(errorBox);--}}
 
-                const formData = new FormData(form);
-                errorBox.innerHTML = '';
-                errorBox.style.display = 'none';
+{{--            form.on('submit', function(e) {--}}
+{{--                e.preventDefault();--}}
+{{--                errorBox.hide().html('');--}}
 
-                $.ajax({
-                    url: "{{ route('Invoice.store') }}",
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                        'Accept': 'application/json'
-                    },
-                    success: function(result) {
+{{--                const formData = new FormData(this);--}}
 
-                        if (result.res === 10) {
-                            toastr.success(result.mySuccess);
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
-                        } else {
-                            errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    },
-                    error: function(xhr) {
+{{--                $.ajax({--}}
+{{--                    url: "{{ route('Invoice.store') }}",--}}
+{{--                    method: 'POST',--}}
+{{--                    data: formData,--}}
+{{--                    processData: false,--}}
+{{--                    contentType: false,--}}
+{{--                    headers: {--}}
+{{--                        'X-CSRF-TOKEN': formData.get('_token'),--}}
+{{--                        'Accept': 'application/json'--}}
+{{--                    },--}}
+{{--                    success: function(result) {--}}
+{{--                        if (result.res === 10) {--}}
+{{--                            toastr.success(result.mySuccess);--}}
+{{--                            if (modalEl) bootstrap.Modal.getInstance(modalEl).hide();--}}
+{{--                            form[0].reset();--}}
+{{--                            setTimeout(() => location.reload(), 1500);--}}
+{{--                        } else {--}}
+{{--                            errorBox.html(`<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`).show();--}}
+{{--                        }--}}
+{{--                    },--}}
+{{--                    error: function(xhr) {--}}
 
-                        if (!navigator.onLine) {
-                            toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال به اینترنت ارسال خواهد شد.');
-                            setTimeout( ()=>{
-                                location.reload();
-                            },2000 );
-                        }
-
-                        else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            let list = '<ul>';
-                            Object.values(xhr.responseJSON.errors).forEach(errs =>
-                                errs.forEach(err => list += `<li>${err}</li>`)
-                            );
-                            list += '</ul>';
-                            errorBox.innerHTML = list;
-                            errorBox.style.display = 'block';
-                        }
-
-                        else {
-                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
-                            errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    }
-                });
-            });
-        });
-    </script>
-
+{{--                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {--}}
+{{--                            let list = '<ul>';--}}
+{{--                            $.each(xhr.responseJSON.errors, function(key, errors) {--}}
+{{--                                errors.forEach(err => list += `<li>${err}</li>`);--}}
+{{--                            });--}}
+{{--                            list += '</ul>';--}}
+{{--                            errorBox.html(list).show();--}}
+{{--                        }--}}
+{{--                        else {--}}
+{{--                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';--}}
+{{--                            errorBox.html(`<ul><li>${errorMessage}</li></ul>`).show();--}}
+{{--                        }--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
 
 @endsection
 
@@ -202,7 +188,7 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">نام دسته‌بندی:</label>
-                            <input name="NameInvoice" type="text" class="form-control validate-required" id="name" placeholder="مثلاً: صورتحساب دان"  data-error-message="نام صورتحساب الزامی است ">
+                            <input name="NameInvoice" type="text" class="form-control validate-required" id="name" placeholder="مثلاً: صورتحساب دان"  data-error-message="نام صورتحساب الزامی است " data-numeric="true">
                         </div>
                     </form>
 
