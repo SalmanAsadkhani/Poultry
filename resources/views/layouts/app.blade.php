@@ -19,8 +19,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
     <link rel="manifest" href="{{url('')}}/manifest.json">
-
     <meta name="theme-color" content="#4A90E2"/>
+
+    <script>
+        window.vapidPublicKey = '{{ env("VAPID_PUBLIC_KEY") }}';
+    </script>
 
     <style>
         @yield('css')
@@ -80,7 +83,6 @@
 <!-- #Top Bar -->
 
     <x-sidebar/>
-
     @yield('main')
 <!-- Plugins Js -->
 
@@ -107,6 +109,8 @@
 <x-service-worker/>
 
 <x-service-js/>
+
+@include('partials.notification')
 
 @yield('js')
 </body>

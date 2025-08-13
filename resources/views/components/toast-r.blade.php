@@ -10,7 +10,7 @@
         "preventDuplicates": false,
         "showDuration": "200",
         "hideDuration": "300",
-        "timeOut": "3500",
+        "timeOut": "4500",
         "extendedTimeOut": "500",
         "showEasing": "swing",
         "hideEasing": "linear",
@@ -27,3 +27,16 @@
     }
 
 </script>
+
+<style>
+
+    @media (max-width: 768px) {
+        .toast-top-left{
+            margin: 0 -3rem !important;
+        }
+
+        .toast{
+            width:28rem !important
+        }
+    }
+</style>

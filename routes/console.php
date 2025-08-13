@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 
 //Schedule::command('app:generate-daily-cycles')->dailyAt('00:05');
 Schedule::command('app:generate-daily-cycles')->everyThirtySeconds();
+Schedule::command('app:send-report-reminders')->dailyAt('20:00');

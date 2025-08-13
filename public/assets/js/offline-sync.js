@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!navigator.onLine) return;
         const submissions = await idbStore.getAll('submissions');
         if (!submissions || submissions.length===0) return;
+
         try{
             const tokenRes = await fetch(window.csrfTokenUrl);
             if (!tokenRes.ok) throw new Error('token failed');
@@ -182,7 +183,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 toastr.success('همه داده‌های آفلاین ارسال شدند.');
                 setTimeout(()=>location.reload(),1200);
             }
-        }catch(err){
+        }
+        catch(err){
             console.error('sync failed', err);
             toastr.warning('همگام‌سازی آفلاین شکست خورد.');
         }

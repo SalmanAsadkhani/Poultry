@@ -59,7 +59,7 @@
 
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $expense->name }}</td>
-                                                <td>{{ $expense->quantity }}</td>
+                                                <td>{{ sep($expense->quantity) }}</td>
                                                 <td>{{ $expense->bag_count }}</td>
                                                 <td>{{ sep($expense->price) }}</td>
                                                 <td>{{ sep($expense->quantity * $expense->price) }}</td>

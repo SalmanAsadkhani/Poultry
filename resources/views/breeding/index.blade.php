@@ -109,7 +109,7 @@
                                                 <th scope="row">{{$k+1}}</th>
                                                 <td>{{$breeding->name}}</td>
                                                 <td>{{$breeding->start_date}}</td>
-                                                <td>{{$breeding->chicken_count}}</td>
+                                                <td>{{sep($breeding->chicken_count)}} <small class="text-danger">هزار</small></td>
                                                 <td class="{{
                                                         $breeding->status === 1 ?
                                                         "text-info" :

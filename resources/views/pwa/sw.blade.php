@@ -1,13 +1,11 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js');
 
 if (workbox) {
-console.log(`Workbox is loaded`);
 
 workbox.precaching.cleanupOutdatedCaches();
 
 
 workbox.precaching.precacheAndRoute([
-{ url: '{{ url("/") }}', revision: 'v1.3' },
 { url: '{{ url("/offline.html") }}', revision: 'v1.3' },
 { url: '{{ asset("assets/css/app.min.css") }}', revision: 'v1.3' },
 { url: '{{ asset("assets/js/app.min.js") }}', revision: 'v1.3' },
@@ -61,6 +59,48 @@ plugins: [bgSyncPlugin]
 })
 );
 
+
+self.addEventListener('push', event => {
+
+let payload = {};
+console.log('Payload data:', payload);
+
+try {
+payload = event.data ? event.data.json() : {};
+} catch (e) {
+payload = {
+title: 'Push Message',
+body: event.data.text()
+};
+}
+
+const title = payload.title || '📢 اعلان جدید';
+const options = {
+body: payload.body || '',
+icon: payload.icon || '{{ asset("assets/images/logo-192.png") }}',
+badge: '{{ asset("assets/images/logo-192.png") }}',
+data: {
+url: payload.action_url || '{{ url("/") }}'
+}
+};
+
+event.waitUntil(
+self.registration.showNotification(title, options)
+);
+});
+
+
+self.addEventListener('notificationclick', event => {
+event.notification.close();
+
+event.waitUntil(
+clients.openWindow(event.notification.data.url)
+);
+});
+
+
 } else {
 console.log(`Workbox didn't load`);
 }
+
+

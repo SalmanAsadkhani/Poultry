@@ -1,83 +1,83 @@
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    {{--document.addEventListener('DOMContentLoaded', function () {--}}
+    {{--    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;--}}
 
-        function handleExpenseStoreModal(modalId) {
-            const modalEl = document.getElementById(modalId);
-            if (!modalEl) return;
-
-
-            const form = modalEl.querySelector('form');
-            const errorBox = document.createElement('div');
-            errorBox.className = 'alert alert-danger mt-2';
-            errorBox.style.display = 'none';
-            form.prepend(errorBox);
+    {{--    function handleExpenseStoreModal(modalId) {--}}
+    {{--        const modalEl = document.getElementById(modalId);--}}
+    {{--        if (!modalEl) return;--}}
 
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                errorBox.style.display = 'none';
-                errorBox.innerHTML = '';
-
-                form.action = "{{ route('expenses.store') }}"
-                const formData = new FormData(form);
-
-                $.ajax({
-                    url: form.action,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                        'Accept': 'application/json'
-                    },
-                    success: function(result) {
-
-                        if (result.res === 10) {
-                            toastr.success(result.mySuccess);
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
-                        } else {
-                            errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    },
-                    error: function(xhr) {
-
-                        if (!navigator.onLine || xhr.status === 0) {
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                        }
-                        else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            let list = '<ul>';
-                            Object.values(xhr.responseJSON.errors).forEach(errs =>
-                                errs.forEach(err => list += `<li>${err}</li>`)
-                            );
-                            list += '</ul>';
-                            errorBox.innerHTML = list;
-                            errorBox.style.display = 'block';
-                        }
-                        else {
-                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
-                            errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    }
-                });
-            });
-        }
+    {{--        const form = modalEl.querySelector('form');--}}
+    {{--        const errorBox = document.createElement('div');--}}
+    {{--        errorBox.className = 'alert alert-danger mt-2';--}}
+    {{--        errorBox.style.display = 'none';--}}
+    {{--        form.prepend(errorBox);--}}
 
 
-        handleExpenseStoreModal('StoreFeedModal');
-        handleExpenseStoreModal('StoreDrugModal');
-        handleExpenseStoreModal('StoreMiscModal');
+    {{--        form.addEventListener('submit', function (e) {--}}
+    {{--            e.preventDefault();--}}
+    {{--            errorBox.style.display = 'none';--}}
+    {{--            errorBox.innerHTML = '';--}}
+
+    {{--            form.action = "{{ route('expenses.store') }}"--}}
+    {{--            const formData = new FormData(form);--}}
+
+    {{--            $.ajax({--}}
+    {{--                url: form.action,--}}
+    {{--                method: 'POST',--}}
+    {{--                data: formData,--}}
+    {{--                processData: false,--}}
+    {{--                contentType: false,--}}
+    {{--                headers: {--}}
+    {{--                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,--}}
+    {{--                    'Accept': 'application/json'--}}
+    {{--                },--}}
+    {{--                success: function(result) {--}}
+
+    {{--                    if (result.res === 10) {--}}
+    {{--                        toastr.success(result.mySuccess);--}}
+    {{--                        bootstrap.Modal.getInstance(modalEl).hide();--}}
+    {{--                        form.reset();--}}
+    {{--                        setTimeout(() => {--}}
+    {{--                            location.reload();--}}
+    {{--                        }, 1500);--}}
+    {{--                    } else {--}}
+    {{--                        errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;--}}
+    {{--                        errorBox.style.display = 'block';--}}
+    {{--                    }--}}
+    {{--                },--}}
+    {{--                error: function(xhr) {--}}
+
+    {{--                    if (!navigator.onLine || xhr.status === 0) {--}}
+    {{--                        bootstrap.Modal.getInstance(modalEl).hide();--}}
+    {{--                        form.reset();--}}
+    {{--                    }--}}
+    {{--                    else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {--}}
+    {{--                        let list = '<ul>';--}}
+    {{--                        Object.values(xhr.responseJSON.errors).forEach(errs =>--}}
+    {{--                            errs.forEach(err => list += `<li>${err}</li>`)--}}
+    {{--                        );--}}
+    {{--                        list += '</ul>';--}}
+    {{--                        errorBox.innerHTML = list;--}}
+    {{--                        errorBox.style.display = 'block';--}}
+    {{--                    }--}}
+    {{--                    else {--}}
+    {{--                        const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';--}}
+    {{--                        errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;--}}
+    {{--                        errorBox.style.display = 'block';--}}
+    {{--                    }--}}
+    {{--                }--}}
+    {{--            });--}}
+    {{--        });--}}
+    {{--    }--}}
 
 
-    });
+    {{--    handleExpenseStoreModal('StoreFeedModal');--}}
+    {{--    handleExpenseStoreModal('StoreDrugModal');--}}
+    {{--    handleExpenseStoreModal('StoreMiscModal');--}}
+
+
+    {{--});--}}
 
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -112,62 +112,62 @@
             });
 
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                errorBox.style.display = 'none';
-                errorBox.innerHTML = '';
-
-                const formData = new FormData(form);
-
-                $.ajax({
-                    url: form.action,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN':csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    success: function(result) {
-
-                        if (result.res === 10) {
-                            toastr.success(result.mySuccess);
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
-                        } else {
-                            errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    },
-                    error: function(xhr) {
-
-                        if (!navigator.onLine || xhr.status === 0) {
-                            bootstrap.Modal.getInstance(modalEl).hide();
-                            form.reset();
-                        }
-
-                        else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                            let list = '<ul>';
-                            Object.values(xhr.responseJSON.errors).forEach(errs =>
-                                errs.forEach(err => list += `<li>${err}</li>`)
-                            );
-                            list += '</ul>';
-                            errorBox.innerHTML = list;
-                            errorBox.style.display = 'block';
-                        }
-
-                        else {
-                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
-                            errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
-                            errorBox.style.display = 'block';
-                        }
-                    }
-                });
-            });
+            // form.addEventListener('submit', function (e) {
+            //     e.preventDefault();
+            //     errorBox.style.display = 'none';
+            //     errorBox.innerHTML = '';
+            //
+            //     const formData = new FormData(form);
+            //
+            //     $.ajax({
+            //         url: form.action,
+            //         method: 'POST',
+            //         data: formData,
+            //         processData: false,
+            //         contentType: false,
+            //         headers: {
+            //             'X-CSRF-TOKEN':csrfToken,
+            //             'Accept': 'application/json'
+            //         },
+            //         success: function(result) {
+            //
+            //             if (result.res === 10) {
+            //                 toastr.success(result.mySuccess);
+            //                 bootstrap.Modal.getInstance(modalEl).hide();
+            //                 form.reset();
+            //                 setTimeout(() => {
+            //                     location.reload();
+            //                 }, 1500);
+            //             } else {
+            //                 errorBox.innerHTML = `<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`;
+            //                 errorBox.style.display = 'block';
+            //             }
+            //         },
+            //         error: function(xhr) {
+            //
+            //             if (!navigator.onLine || xhr.status === 0) {
+            //                 bootstrap.Modal.getInstance(modalEl).hide();
+            //                 form.reset();
+            //             }
+            //
+            //             else if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+            //                 let list = '<ul>';
+            //                 Object.values(xhr.responseJSON.errors).forEach(errs =>
+            //                     errs.forEach(err => list += `<li>${err}</li>`)
+            //                 );
+            //                 list += '</ul>';
+            //                 errorBox.innerHTML = list;
+            //                 errorBox.style.display = 'block';
+            //             }
+            //
+            //             else {
+            //                 const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';
+            //                 errorBox.innerHTML = `<ul><li>${errorMessage}</li></ul>`;
+            //                 errorBox.style.display = 'block';
+            //             }
+            //         }
+            //     });
+            // });
         }
 
 
@@ -199,39 +199,39 @@
          });
 
 
-         form.addEventListener('submit', function(e) {
-             e.preventDefault();
-             const formData = new FormData(form);
-
-             $.ajax({
-                 url: form.action,
-                 method: 'POST',
-                 data: formData,
-                 processData: false,
-                 contentType: false,
-                 headers: {
-                     'X-CSRF-TOKEN':csrfToken,
-                     'Accept': 'application/json'
-                 },
-                 success: function(result) {
-
-                     if (result.res === 10) {
-                         toastr.success(result.mySuccess);
-                         setTimeout(() => { location.reload(); }, 1500);
-                     }
-                 },
-                 error: function(xhr) {
-
-                     if (!navigator.onLine || xhr.status === 0) {
-                         bootstrap.Modal.getInstance(modalEl).hide();
-                         form.reset();
-                     }
-
-                     toastr.error(result.myAlert || 'خطایی در حذف رخ داد.');
-
-                 }
-             });
-         });
+         // form.addEventListener('submit', function(e) {
+         //     e.preventDefault();
+         //     const formData = new FormData(form);
+         //
+         //     $.ajax({
+         //         url: form.action,
+         //         method: 'POST',
+         //         data: formData,
+         //         processData: false,
+         //         contentType: false,
+         //         headers: {
+         //             'X-CSRF-TOKEN':csrfToken,
+         //             'Accept': 'application/json'
+         //         },
+         //         success: function(result) {
+         //
+         //             if (result.res === 10) {
+         //                 toastr.success(result.mySuccess);
+         //                 setTimeout(() => { location.reload(); }, 1500);
+         //             }
+         //         },
+         //         error: function(xhr) {
+         //
+         //             if (!navigator.onLine || xhr.status === 0) {
+         //                 bootstrap.Modal.getInstance(modalEl).hide();
+         //                 form.reset();
+         //             }
+         //
+         //             toastr.error(result.myAlert || 'خطایی در حذف رخ داد.');
+         //
+         //         }
+         //     });
+         // });
      }
 
      setupDeleteModal('DeleteFeedModal', 'feed');

@@ -5,20 +5,18 @@
 @section('js')
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        $(document).ready(function() {
 
-            document.addEventListener('click', function (e) {
+            $(document).on('click', '.add-feed-row', function() {
+                const button = $(this);
+                const reportId = button.data('report-id');
+                const wrapper = button.prev('.feed-consumption-wrapper');
+                const newIndex = 'new_' + Date.now();
 
-                if (e.target.classList.contains('add-feed-row')) {
-                    const button = e.target;
-                    const reportId = button.dataset.reportId;
-                    const wrapper = button.previousElementSibling;
-                    const newIndex = 'new_' + Date.now();
-
-                    const newRowHtml = `
+                const newRowHtml = `
                 <div class="row feed-consumption-row mb-2">
                     <div class="col">
-                        <select name="feeds[${reportId}][${newIndex}][type]" class="form-select form-select-sm">
+                        <select name="feeds[${reportId}][${newIndex}][type]" class="form-select form-select-sm" style="display: block">
                             <option value="استارتر">استارتر</option>
                             <option value="پیش دان">پیش دان</option>
                             <option value="میان دان">میان دان</option>
@@ -33,82 +31,79 @@
                     </div>
                 </div>
             `;
-                    wrapper.insertAdjacentHTML('beforeend', newRowHtml);
-                }
-
-                if (e.target.classList.contains('remove-feed-row')) {
-                    e.target.closest('.feed-consumption-row').remove();
-                }
+                wrapper.append(newRowHtml);
             });
 
-            document.addEventListener('click', function (e) {
-                if (e.target.classList.contains('save-report')) {
-                    e.preventDefault();
-
-                    const button = e.target;
-                    const id = button.dataset.id;
-                    const container = button.closest('tr') || button.closest('.card-body');
-
-                    const formData = new FormData();
-                    formData.append('mortality', container.querySelector('input[name*="mortality"]').value);
-                    formData.append('actions', container.querySelector('input[name*="actions"]').value);
-                    formData.append('desc', container.querySelector('input[name*="desc"]').value);
-                    formData.append('_token', '{{ csrf_token() }}');
-                    formData.append('daily_id', id);
+            $(document).on('click', '.remove-feed-row', function() {
+                $(this).closest('.feed-consumption-row').remove();
+            });
 
 
-                    const visibleRows = Array.from(container.querySelectorAll('.feed-consumption-row'))
-                        .filter(row => row.offsetParent !== null);
+            $(document).on('click', '.save-report', function (e) {
+                e.preventDefault();
 
-                    const feedConsumptions = visibleRows.map(row => {
-                        const type = row.querySelector('select[name*="[type]"]').value;
-                        const bags = row.querySelector('input[name*="[bags]"]').value;
-                        const consumptionIdInput = row.querySelector('input[name*="[id]"]');
-                        const consumptionId = consumptionIdInput ? consumptionIdInput.value : null;
-                        return (type && bags) ? { id: consumptionId || null, type, bags } : null;
-                    }).filter(item => item !== null);
+                const button = $(this);
+                const id = button.data('id');
+                const container = button.closest('tr').length ? button.closest('tr') : button.closest('.card-body');
 
-                    formData.append('feeds', JSON.stringify(feedConsumptions));
+                const formData = new FormData();
+                formData.append('mortality', container.find('input[name*="mortality"]').val());
+                formData.append('actions', container.find('input[name*="actions"]').val());
+                formData.append('desc', container.find('input[name*="desc"]').val());
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('daily_id', id);
 
-                    let url = "{{ route('daily.confirm', ':id') }}".replace(':id', id);
 
+                const feedConsumptions = [];
+                container.find('.feed-consumption-row:visible').each(function() {
+                    const row = $(this);
+                    const type = row.find('select[name*="[type]"]').val();
+                    const bags = row.find('input[name*="[bags]"]').val();
+                    const consumptionId = row.find('input[name*="[id]"]').val();
+                    if (type && bags) {
+                        feedConsumptions.push({ id: consumptionId || null, type: type, bags: bags });
+                    }
+                });
 
-                    fetch(url, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': formData.get('_token'),
-                            'Accept': 'application/json'
+                formData.append('feeds', JSON.stringify(feedConsumptions));
+
+                let url = "{{ route('daily.confirm', ':id') }}";
+                url = url.replace(':id', id);
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: { 'Accept': 'application/json' },
+                    success: function (result) {
+                        if (result.res === 10) {
+                            toastr.success(result.mySuccess);
+                            setTimeout(() => { location.reload(); }, 1500);
+                        } else {
+                            toastr.error(result.myAlert);
                         }
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                return response.json().then(data => Promise.reject({ status: response.status, body: data }));
-                            }
-                            return response.json().then(data => ({ status: response.status, body: data }));
-                        })
-                        .then(({ status, body }) => {
-                            if (status === 200 && body.res === 10) {
-                                toastr.success(res.mySuccess);
-                                setTimeout(() => location.reload(), 1500);
-                            } else {
-                                toastr.error(res.myAlert);
-                            }
-                        })
-                        .catch(error => {
-                            if (error.status === 422 && error.body.errors) {
-                                toastr.error(e)
-                            } else {
-                                toastr.info('شما آفلاین هستید. اطلاعات شما ذخیره شد و پس از اتصال ارسال خواهد شد.');
-                                setTimeout(() => location.reload(), 2000);
-                            }
-                        });
-                }
-            });
+                    },
+                    error: function (xhr) {
+                        if (!navigator.onLine || xhr.status === 0) {
+                            toastr.warning('شما آفلاین هستید,امکان ثبت اطلاعات وجود ندارد.')
+                        } else {
 
+
+                            let err = 'خطایی در ارسال داده‌ها رخ داد';
+                            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                                err = Object.values(xhr.responseJSON.errors).join(' - ');
+                            } else if (xhr.responseJSON?.myAlert) {
+                                err = xhr.responseJSON.myAlert;
+                            }
+                            toastr.error(err);
+                        }
+                    }
+                });
+            });
         });
     </script>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
