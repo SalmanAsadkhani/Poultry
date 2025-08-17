@@ -63,7 +63,6 @@ plugins: [bgSyncPlugin]
 self.addEventListener('push', event => {
 
 let payload = {};
-console.log('Payload data:', payload);
 
 try {
 payload = event.data ? event.data.json() : {};

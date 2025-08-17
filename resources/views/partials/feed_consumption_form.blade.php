@@ -4,7 +4,7 @@
             <input type="hidden" name="feeds[{{ $report->id }}][{{ $loop->index }}][id]" value="{{ $consumption->id }}">
             <div class="col">
                 <select name="feeds[{{ $report->id }}][{{ $loop->index }}][type]" class="form-select form-select-sm" style="display: block">
-                    @foreach(['استارتر', 'پیش دان', 'میان دان', 'پس دان'] as $type)
+                    @foreach(['استارتر', 'پیش دان', 'میان دان','میان دان دو', 'پس دان' , 'پس دان دو'] as $type)
                         <option value="{{ $type }}" @if($consumption->feed_type == $type) selected @endif>{{ $type }}</option>
                     @endforeach
                 </select>
@@ -20,7 +20,7 @@
         <div class="row feed-consumption-row mb-2">
             <div class="col">
                 <select name="feeds[{{ $report->id }}][0][type]" class="form-select form-select-sm" style="display: block">
-                    @foreach(['استارتر', 'پیش دان', 'میان دان', 'پس دان'] as $type)
+                    @foreach(['استارتر', 'پیش دان', 'میان دان','میان دان دو', 'پس دان' , 'پس دان دو'] as $type)
                         <option value="{{ $type }}">{{ $type }}</option>
                     @endforeach
                 </select>

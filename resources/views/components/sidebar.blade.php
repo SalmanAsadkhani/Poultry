@@ -35,7 +35,7 @@
                 </li>
 
                 <li>
-                    <a href="javascript:void(0);" style="background: #f8f9fa;">
+                    <a href='{{route('income.index')}}' style="background: #f8f9fa;">
                         <i class="fab fa-layer-group"></i>
                         <span>درآمدها</span>
                     </a>

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteInvoiceRequest;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Requests\StoreExpenseRequest;
+use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\BreedingCycle;
 use App\Models\Drug;
 use App\Models\DrugCategory;
@@ -24,14 +26,17 @@ class ExpenseController extends Controller
 
         $cycles = BreedingCycle::with([
             'feedCategories',
+            'feedCategories.feeds',
             'drugCategories',
-            'miscellaneousCategories'
+            'drugCategories.drugs',
+            'miscellaneousCategories',
+            'miscellaneousCategories.miscellaneous',
         ])->where('user_id', auth()->id())->get();
 
         return view('expense.index' , compact('cycles'));
     }
 
-    public function Invoice(StoreInvoiceRequest $request ): JsonResponse
+    public function invoice(StoreInvoiceRequest $request ): JsonResponse
     {
 
         $model = match ($request['expense_category']) {
@@ -51,13 +56,56 @@ class ExpenseController extends Controller
 
     }
 
+    public function invoice_update(UpdateInvoiceRequest $request ,$id)
+    {
+        $model = match ($request['expense_category']) {
+            'feed' => FeedCategory::class,
+            'drug' => DrugCategory::class,
+            'misc' => MiscellaneousCategory::class,
+        };
+
+
+        $expense = $model::findOrFail($id);
+
+        $expense->update([
+            'breeding_cycle_id' => $request->breeding_cycle_id ,
+            'name' => $request->name,
+        ]);
+
+        return response()->json([
+            'res' => 10,
+            'mySuccess' => "دسته بندی  {$request->name} با موفقیت ویرایش گردید "
+        ]);
+    }
+
+    public function invoice_destroy(Request $request ,$id)
+    {
+        $request->validate(['category_type' => 'required|string|in:feed,drug,misc']);
+
+        $model = match ($request['category_type']) {
+            'feed' => FeedCategory::class,
+            'drug' => DrugCategory::class,
+            'misc' => MiscellaneousCategory::class,
+        };
+
+
+        $expense = $model::findOrFail($id);
+
+        $expense->delete();
+
+        return response()->json([
+            'res' => 10,
+            'mySuccess' => "دسته بندی  {$request->name} با موفقیت حذف گردید "
+        ]);
+    }
+
     public function showCategory(string $type, int $categoryId) : View
     {
 
         [$categoryModel, $relation, $viewName, $titlePrefix] = match ($type) {
-            'feed' => [FeedCategory::class, 'feeds', 'expense.show-feed', 'صورتحساب دان'],
-            'drug' => [DrugCategory::class, 'drugs', 'expense.show-drug', 'صورتحساب  داروخانه'],
-            'misc' => [MiscellaneousCategory::class, 'miscellaneous', 'expense.show-misc', 'صورتحساب  متفرقه'],
+            'feed' => [FeedCategory::class, 'feeds', 'expense.show-feed', 'صورتحساب هزینه های دان'],
+            'drug' => [DrugCategory::class, 'drugs', 'expense.show-drug', 'صورتحساب هزینه های داروخانه'],
+            'misc' => [MiscellaneousCategory::class, 'miscellaneous', 'expense.show-misc', 'صورتحساب هزینه های متفرقه'],
 
         };
 
@@ -95,7 +143,6 @@ class ExpenseController extends Controller
 
     public function store(StoreExpenseRequest $request) : JsonResponse
     {
-
         [$model, $categoryIdKey] = match ($request->type) {
             'feed' => [Feed::class, 'feed_category_id'],
             'drug' => [Drug::class, 'drug_category_id'],
@@ -127,8 +174,6 @@ class ExpenseController extends Controller
 
     public function update(UpdateExpenseRequest $request, $id) : JsonResponse
     {
-
-
        [ $model , $categoryIdKey ] = match ($request->type) {
             'feed' => [Feed::class, 'feed_category_id'],
             'drug' => [Drug::class, 'drug_category_id'],

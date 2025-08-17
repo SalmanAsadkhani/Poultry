@@ -1,6 +1,7 @@
+
 @extends('layouts.app')
 
-@section('title','هزینه‌های متفرقه')
+@section('title','درآمدهای متفرقه')
 
 @section('js')
     <x-scriptExpenses/>
@@ -42,8 +43,8 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>نام</th>
-                                            <th>تعداد</th>
+                                            <th>نوع</th>
+                                            <th>تعداد/لیتر</th>
                                             <th>قیمت واحد <small>(تومان)</small></th>
                                             <th>قیمت کل <small>(تومان)</small></th>
                                             <th>توضیحات</th>
@@ -52,24 +53,24 @@
                                         </thead>
                                         <tbody>
 
-                                        @forelse($expenses as $expense)
+                                        @forelse($incomes as $income)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $expense->name }}</td>
-                                                <td>{{ $expense->quantity }}</td>
-                                                <td>{{ sep($expense->price) }}</td>
-                                                <td>{{ sep($expense->quantity * $expense->price) }}</td>
-                                                <td>{{ $expense->description }}</td>
+                                                <td>{{ $income->name }}</td>
+                                                <td>{{ $income->quantity }}</td>
+                                                <td>{{ sep($income->price) }}</td>
+                                                <td>{{ sep($income->quantity * $income->price) }}</td>
+                                                <td>{{ $income->description }}</td>
                                                 <td>
                                                     <button
                                                         class="btn tblActnBtn btn-edit"
-                                                        data-id="{{ $expense->id }}"
-                                                        data-type_modal="expense"
+                                                        data-id="{{ $income->id }}"
+                                                        data-type_modal="income"
                                                         data-type="misc"
-                                                        data-name="{{ $expense->name }}"
-                                                        data-quantity="{{ $expense->quantity }}"
-                                                        data-price="{{ $expense->price }}"
-                                                        data-description="{{ $expense->description }}"
+                                                        data-name="{{ $income->name }}"
+                                                        data-quantity="{{ $income->quantity }}"
+                                                        data-price="{{ $income->price }}"
+                                                        data-description="{{ $income->description }}"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#UpdateMiscModal">
                                                         <i class="material-icons">mode_edit</i>
@@ -77,9 +78,9 @@
 
                                                     <button
                                                         class="btn tblActnBtn btn-delete"
-                                                        data-id="{{ $expense->id }}"
-                                                        data-type_modal="expense"
-                                                        data-name="{{ $expense->name}}"
+                                                        data-id="{{ $income->id }}"
+                                                        data-name="{{ $income->name}}"
+                                                        data-type_modal="income"
                                                         data-bs-toggle="modal"
                                                         data-type="misc"
                                                         data-bs-target="#DeleteMiscModal">
@@ -98,11 +99,11 @@
                             </x-slot:desktop>
 
                             <x-slot:mobile >
-                                @forelse ($expenses as $expense)
+                                @forelse ($incomes as $income)
                                     <div class="card mb-3" x-data="{ open: false }">
 
                                         <div class="card-header d-flex justify-content-between align-items-center" @click="open = !open" style="cursor: pointer;">
-                                            <strong><span class="text-danger"> نام  :</span> {{ $expense->name }}</strong> - <strong>{{ sep($expense->price)}} <span class="text-danger">تومان     </span> </strong>
+                                            <strong><span class="text-danger"> نام  :</span> {{ $income->name }}</strong> - <strong>{{ sep($income->price)}} <span class="text-danger">تومان     </span> </strong>
                                             <span x-show="!open">▼</span>
                                             <span x-show="open">▲</span>
                                         </div>
@@ -111,44 +112,46 @@
                                         <div class="card-body" x-show="open" x-transition>
 
                                             <div class="bold text-danger mb-5">نام :
-                                                <span class="text-dark">{{ $expense->name }}</span>
+                                                <span class="text-dark">{{ $income->name }}</span>
                                             </div>
 
-                                            <div class="bold text-danger mb-5"> تعداد :
-                                                <span class="text-dark">{{ $expense->quantity }}</span>
+                                            <div class="bold text-danger mb-5"> تعداد/لیتر :
+                                                <span class="text-dark">{{ $income->quantity }}</span>
                                             </div>
 
                                             <div class="bold text-danger mb-5"> قیمت واحد :
-                                                <span class="text-dark">{{ sep($expense->price) }} <small class="text-dark">(تومان)</small></span>
+                                                <span class="text-dark">{{ sep($income->price) }} <small class="text-dark">(تومان)</small></span>
                                             </div>
 
                                             <div class="bold text-danger mb-5">قیمت کل :
-                                                <span class="text-dark">{{ sep($expense->quantity * $expense->price) }} <small class="text-dark">(تومان)</small></span>
+                                                <span class="text-dark">{{ sep($income->quantity * $income->price) }} <small class="text-dark">(تومان)</small></span>
                                             </div>
 
                                             <div class="bold text-danger mb-5">توضیحات :
-                                                <span class="text-dark">{{ $expense->description }}</span>
+                                                <span class="text-dark">{{ $income->description }}</span>
                                             </div>
 
 
                                             <div class="bold text-danger mb-5">عملیات :
                                                 <button
                                                     class="btn btn-sm btn-primary btn-edit"
-                                                    data-id="{{ $expense->id }}"
-                                                    data-type="drug"
-                                                    data-name="{{ $expense->name }}"
-                                                    data-quantity="{{ $expense->quantity }}"
-                                                    data-price="{{ $expense->price }}"
-                                                    data-description="{{ $expense->description }}"
+                                                    data-id="{{ $income->id }}"
+                                                    data-type_modal="income"
+                                                    data-type="misc"
+                                                    data-name="{{ $income->name }}"
+                                                    data-quantity="{{ $income->quantity }}"
+                                                    data-price="{{ $income->price }}"
+                                                    data-description="{{ $income->description }}"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#UpdateMiscModal">ویرایش
                                                 </button>
 
                                                 <button
                                                     class="btn btn-sm btn-danger btn-delete"
-                                                    data-id="{{ $expense->id }}"
-                                                    data-name="{{ $expense->name}}"
-                                                    data-type="misc"
+                                                    data-id="{{ $income->id }}"
+                                                    data-type_modal="income"
+                                                    data-name="{{ $income->name}}"
+                                                    data-type="miscIncome"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#DeleteMiscModal">حذف
                                                 </button>
@@ -180,7 +183,7 @@
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="StoreMiscForm" method="post" action="{{ route('expenses.store') }}">
+                            <form id="StoreMiscForm" method="post" action="{{ route('income.store') }}">
                                 @csrf
                                 <input type="hidden" name="type" value="misc">
                                 <input type="hidden" name="category_id" value="{{ $category->id }}">
@@ -188,16 +191,16 @@
 
 
                                 <div class="mb-3">
-                                    <label class="form-label">نام </label>
-                                    <input type="text" name="name" class="form-control   validate-required" data-error=" فیلد نام الزامی است" placeholder="مثلا : مجوزجوجه ریزی" >
+                                    <label class="form-label">نوع جنس</label>
+                                    <input type="text" name="name" class="form-control   validate-required" data-error=" فیلد نوع جنس الزامی است" placeholder="نوع جنس رو وارد کنید" >
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">تعداد</label>
-                                    <input type="tel" name="quantity" class="form-control   validate-required" data-error="فیلد تعداد الزامی است" placeholder="مثلا :1" dir="rtl" >
+                                    <input type="tel" name="quantity" class="form-control   validate-required" data-error="فیلد تعداد الزامی است" placeholder="تعداد رو وارد کنید" dir="rtl" >
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">قیمت واحد</label>
-                                    <input type="tel" name="unit_price" class="form-control"  placeholder="مثلا : 1,000,000" dir="rtl">
+                                    <input type="tel" name="price" class="form-control"  placeholder="قیمت رو وارد کنید" dir="rtl">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">توضیحات</label>
@@ -213,7 +216,7 @@
                 </div>
             </div>
 
-            <div class="modal fade  edit-modal" id="UpdateMiscModal" tabindex="-1" aria-labelledby="UpdateMiscModalLabel" aria-hidden="true">
+            <div class="modal fade  edit-income-modal" id="UpdateMiscModal" tabindex="-1" aria-labelledby="UpdateMiscModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -231,19 +234,19 @@
 
                                 <div class="mb-3">
                                     <label for="edit-misc-name" class="form-label">نام</label>
-                                    <input type="text" name="name" id="edit-misc-name" class="form-control validate-required" data-error="فیلد نام الزامی است" value="{{$expense->name ?? ''}}">
+                                    <input type="text" name="name" id="edit-misc-name" class="form-control validate-required" data-error="فیلد نام الزامی است" value="{{$income->name ?? ''}}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-misc-quantity" class="form-label">تعداد</label>
-                                    <input type="tel" name="quantity" id="edit-misc-quantity" class="form-control   validate-required" data-error="فیلد تعداد الزامی است" value="{{$expense->quantity ?? ''}}" dir="rtl">
+                                    <input type="tel" name="quantity" id="edit-misc-quantity" class="form-control   validate-required" data-error="فیلد تعداد الزامی است" value="{{$income->quantity ?? ''}}" dir="rtl">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-misc-unit_price" class="form-label">قیمت واحد <small>(تومان)</small></label>
-                                    <input type="tel" name="unit_price" id="edit-misc-unit_price" class="form-control" value="{{$expense->price ?? ''}}" dir="rtl">
+                                    <input type="tel" name="price" id="edit-misc-unit_price" class="form-control" value="{{$income->price ?? ''}}" dir="rtl">
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-misc-description" class="form-label">توضیحات</label>
-                                    <textarea name="description" id="edit-misc-description" class="form-control" rows="3">{{$expense->descriprion ?? ''}}</textarea>
+                                    <textarea name="description" id="edit-misc-description" class="form-control" rows="3">{{$income->descriprion ?? ''}}</textarea>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
@@ -263,7 +266,7 @@
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>آیا مطمئن هستید که می‌خواهید  <span id="DeleteName" class="text-danger"></span> <strong class="text-danger" id="delete-expense-name"></strong> را حذف کنید؟</p>
+                            <p>آیا مطمئن هستید که می‌خواهید  <span id="DeleteName" class="text-danger"></span> <strong class="text-danger" id="delete-income-name"></strong> را حذف کنید؟</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>

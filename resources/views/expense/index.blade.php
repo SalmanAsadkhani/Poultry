@@ -1,72 +1,9 @@
 @extends('layouts.app')
 
-@section('title','صورتحساب ها')
-
-@section('css')
-
-@endsection
+@section('title','صورتحساب هزینه ها')
 
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-{{--    <script>--}}
-{{--        $(document).ready(function() {--}}
-{{--            const form = $('#Invoice');--}}
-{{--            const modalEl = document.getElementById('addInvoiceModal'); // bootstrap.Modal needs the DOM element--}}
-
-{{--            if (form.length === 0) {--}}
-{{--                return;--}}
-{{--            }--}}
-
-{{--            const errorBox = $('<div class="alert alert-danger mt-2" style="display: none;"></div>');--}}
-{{--            form.prepend(errorBox);--}}
-
-{{--            form.on('submit', function(e) {--}}
-{{--                e.preventDefault();--}}
-{{--                errorBox.hide().html('');--}}
-
-{{--                const formData = new FormData(this);--}}
-
-{{--                $.ajax({--}}
-{{--                    url: "{{ route('Invoice.store') }}",--}}
-{{--                    method: 'POST',--}}
-{{--                    data: formData,--}}
-{{--                    processData: false,--}}
-{{--                    contentType: false,--}}
-{{--                    headers: {--}}
-{{--                        'X-CSRF-TOKEN': formData.get('_token'),--}}
-{{--                        'Accept': 'application/json'--}}
-{{--                    },--}}
-{{--                    success: function(result) {--}}
-{{--                        if (result.res === 10) {--}}
-{{--                            toastr.success(result.mySuccess);--}}
-{{--                            if (modalEl) bootstrap.Modal.getInstance(modalEl).hide();--}}
-{{--                            form[0].reset();--}}
-{{--                            setTimeout(() => location.reload(), 1500);--}}
-{{--                        } else {--}}
-{{--                            errorBox.html(`<ul><li>${result.myAlert || 'خطایی رخ داد.'}</li></ul>`).show();--}}
-{{--                        }--}}
-{{--                    },--}}
-{{--                    error: function(xhr) {--}}
-
-{{--                        if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {--}}
-{{--                            let list = '<ul>';--}}
-{{--                            $.each(xhr.responseJSON.errors, function(key, errors) {--}}
-{{--                                errors.forEach(err => list += `<li>${err}</li>`);--}}
-{{--                            });--}}
-{{--                            list += '</ul>';--}}
-{{--                            errorBox.html(list).show();--}}
-{{--                        }--}}
-{{--                        else {--}}
-{{--                            const errorMessage = xhr.responseJSON?.myAlert || 'خطایی در ارتباط با سرور رخ داد.';--}}
-{{--                            errorBox.html(`<ul><li>${errorMessage}</li></ul>`).show();--}}
-{{--                        }--}}
-{{--                    }--}}
-{{--                });--}}
-{{--            });--}}
-{{--        });--}}
-{{--    </script>--}}
-
+    <x-invoices/>
 @endsection
 
 @section('main')
@@ -81,7 +18,7 @@
                         <div class="header">
                             <div>
 
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#addInvoiceModal">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#StoreInvoiceModal">
                                     افزودن صورتحساب
                                 </button>
 
@@ -99,6 +36,8 @@
                                                 <th> نام دسته‌بندی </th>
                                                 <th>دسته‌بندی </th>
                                                 <th>جزییات</th>
+                                                <th>عملیات</th>
+
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -108,6 +47,34 @@
                                                     <td>دان</td>
                                                     <td>
                                                         <a href="{{ route('expense.category.show', ['type' => 'feed', 'category' => $category->id]) }}" class="btn btn-sm btn-outline-primary btn-border-radius">مشاهده</a>
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            class="btn tblActnBtn btn-edit"
+                                                            data-bs-toggle="modal"
+                                                            data-type_modal='expense'
+                                                            data-bs-target="#UpdateInvoiceModal"
+                                                            data-update_url="{{ route('invoice.expense.update', $category->id) }}"
+                                                            data-category_id="{{$category->id}}"
+                                                            data-name="{{ $category->name }}"
+                                                            data-breeding_cycle_id="{{ $cycle->id }}"
+                                                            data-category_type="feed">
+                                                            <i class="material-icons">mode_edit</i>
+                                                        </button>
+
+                                                        @if ($category->feeds->count() == 0)
+                                                        <button
+                                                            class="btn tblActnBtn btn-delete"
+                                                            data-bs-toggle="modal"
+                                                            data-category_type="feed"
+                                                            data-type_modal='expense'
+                                                            data-bs-target="#DeleteInvoiceModal"
+                                                            data-delete_url="{{ route('invoice.expense.destroy', $category->id) }}"
+                                                            data-category_id="{{$category->id}}"
+                                                            data-name="{{ $category->name }}">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -120,6 +87,33 @@
                                                     <td>
                                                         <a href="{{ route('expense.category.show', ['type' => 'drug', 'category' => $category->id]) }}" class="btn btn-sm btn-outline-primary btn-border-radius">مشاهده</a>
                                                     </td>
+                                                    <td>
+                                                        <button
+                                                            class="btn tblActnBtn btn-edit"
+                                                            data-bs-toggle="modal"
+                                                            data-type_modal='expense'
+                                                            data-bs-target="#UpdateInvoiceModal"
+                                                            data-update_url="{{ route('invoice.expense.update', $category->id) }}"
+                                                            data-category_id="{{$category->id}}"
+                                                            data-name="{{ $category->name }}"
+                                                            data-breeding_cycle_id="{{ $cycle->id }}"
+                                                            data-category_type="drug">
+                                                            <i class="material-icons">mode_edit</i>
+                                                        </button>
+                                                        @if ($category->drugs->count() == 0)
+                                                        <button
+                                                            class="btn tblActnBtn btn-delete"
+                                                            data-bs-toggle="modal"
+                                                            data-category_type="drug"
+                                                            data-type_modal='expense'
+                                                            data-bs-target="#DeleteInvoiceModal"
+                                                            data-delete_url="{{ route('invoice.expense.destroy', $category->id) }}"
+                                                            data-category_id="{{$category->id}}"
+                                                            data-name="{{ $category->name }}">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
 
@@ -129,6 +123,35 @@
                                                     <td>متفرقه</td>
                                                     <td>
                                                         <a href="{{ route('expense.category.show', ['type' => 'misc', 'category' => $category->id]) }}" class="btn btn-sm btn-outline-primary btn-border-radius">مشاهده</a>
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            class="btn tblActnBtn btn-edit"
+                                                            data-bs-toggle="modal"
+                                                            data-type_modal='expense'
+                                                            data-bs-target="#UpdateInvoiceModal"
+                                                            data-update_url="{{ route('invoice.expense.update', $category->id) }}"
+                                                            data-category_id="{{$category->id}}"
+                                                            data-name="{{ $category->name }}"
+                                                            data-breeding_cycle_id="{{ $cycle->id }}"
+                                                            data-category_type="misc">
+                                                            <i class="material-icons">mode_edit</i>
+                                                        </button>
+                                                        @if ($category->miscellaneous->count() == 0)
+
+                                                        <button
+                                                            class="btn tblActnBtn btn-delete"
+                                                            data-bs-toggle="modal"
+                                                            data-category_type="misc"
+                                                            data-type_modal='expense'
+                                                            data-bs-target="#DeleteInvoiceModal"
+                                                            data-delete_url="{{ route('invoice.expense.destroy', $category->id) }}"
+                                                            data-category_id="{{$category->id}}"
+                                                            data-name="{{ $category->name }}">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                        @endif
+
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -152,11 +175,11 @@
         </div>
     </section>
 
-    <div class="modal fade" id="addInvoiceModal" tabindex="-1" aria-labelledby="addInvoiceModalLabel" aria-hidden="true">
+    <div class="modal fade" id="StoreInvoiceModal" tabindex="-1" aria-labelledby="StoreInvoiceModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addInvoiceModalLabel">فرم افزودن دسته‌بندی</h5>
+                    <h5 class="modal-title" id="StoreInvoiceModalLabel">فرم افزودن دسته‌بندی</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -190,18 +213,90 @@
                             <label for="name" class="form-label">نام دسته‌بندی:</label>
                             <input name="NameInvoice" type="text" class="form-control validate-required" id="name" placeholder="مثلاً: صورتحساب دان"  data-error-message="نام صورتحساب الزامی است " data-numeric="true">
                         </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                            <button type="submit" form="Invoice" class="btn btn-success" data-validate="true">ذخیره </button>
+                        </div>
                     </form>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-                    <button type="submit" form="Invoice" class="btn btn-success" data-validate="true">ذخیره </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal fade" id="UpdateInvoiceModal" tabindex="-1" aria-labelledby="UpdateInvoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="UpdateInvoiceModalLabel">فرم ویرایش دسته‌بندی</h5>
+                    <button type="button" class="close" data-bs-dismiss-modal aria-label="Close"></button>
+                </div>
+
+                <form id="UpdateInvoiceForm" method="post" novalidate="novalidate">
+                    <input >
+                    <div class="modal-body">
+                        @csrf
+                        <input type="hidden" name="id" value="category_id">
+
+                        <div class="mb-3">
+                            <label for="cycle" class="form-label">انتخاب دوره:</label>
+                            <select name="breeding_cycle_id" id="cycle" style="display: block">
+                                @forelse($cycles as $cycle)
+                                    <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
+                                @empty
+                                    <option disabled selected>هیچ دوره‌ای موجود نیست</option>
+                                @endforelse
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label"> دسته‌بندی:</label>
+                            <select name="expense_category" id="Expense_category" style="display: block">
+                                <option value="feed">دان</option>
+                                <option value="drug">داروخانه</option>
+                                <option value="misc">متفرقه</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">نام دسته‌بندی:</label>
+                            <input name="name" type="text" class="form-control validate-required" id="name" placeholder="مثلاً: صورتحساب دان"  data-error-message="نام صورتحساب الزامی است " data-numeric="true">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                        <button type="submit" class="btn btn-success" data-validate="true">ذخیره تغییرات</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="DeleteInvoiceModal" tabindex="-1" aria-labelledby="DeleteInvoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="DeleteInvoiceModalLabel">تایید حذف</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>آیا از حذف دسته‌بندی <strong id="categoryNameToDelete"></strong> مطمئن هستید؟</p>
+                </div>
+                <div class="modal-footer">
+                    <form id="delete-invoice-form" method="POST">
+                        @csrf
+                        <input type="hidden" name="category_type" value="category_type">
+                        <input type="hidden" name="id" value="category_id">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                        <button type="submit" class="btn btn-danger">بله، حذف کن</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 

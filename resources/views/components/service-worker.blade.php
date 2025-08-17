@@ -11,12 +11,6 @@
         });
     }
 
-    if (navigator.serviceWorker.controller) {
-        console.log("✅ Service Worker فعال است و صفحه را کنترل می‌کند.");
-    } else {
-        console.log("⚠️ Service Worker هنوز صفحه را کنترل نمی‌کند. صفحه را رفرش کنید.");
-    }
-
     let deferredPrompt;
 
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -39,7 +33,6 @@
 
 
                 const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
 
                 deferredPrompt = null;
 
@@ -48,19 +41,6 @@
         });
     }
 
-
-
-    let refreshing;
-
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (refreshing) return;
-        refreshing = true;
-
-        toastr.info('نسخه جدیدی از برنامه در دسترس است، در حال بارگذاری مجدد...');
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
-    });
 
 </script>
 

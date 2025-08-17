@@ -48,6 +48,16 @@ class BreedingCycle extends Model
         return $this->hasMany(Feed::class);
     }
 
+    public function chickenIncomeCategories(): HasMany
+    {
+        return $this->hasMany(ChickenSalesCategory::class);
+    }
+
+    public function miscIncomeCategories(): HasMany
+    {
+        return $this->hasMany(MiscellaneousIncomeCategory::class);
+    }
+
     public function getFeedConsumptionAnalytics(): array
     {
 

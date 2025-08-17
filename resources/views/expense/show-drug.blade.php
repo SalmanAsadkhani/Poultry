@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','هزینه‌ها')
+@section('title','هزینه‌های داروخانه')
 
 @section('js')
 
@@ -66,6 +66,7 @@
                                             <button
                                                 class="btn tblActnBtn btn-edit"
                                                 data-id="{{ $expense->id }}"
+                                                data-type_modal="expense"
                                                 data-type="drug"
                                                 data-name="{{ $expense->name }}"
                                                 data-quantity="{{ $expense->quantity }}"
@@ -79,6 +80,7 @@
                                             <button
                                                 class="btn tblActnBtn btn-delete"
                                                 data-id="{{ $expense->id }}"
+                                                data-type_modal="expense"
                                                 data-name="{{ $expense->name}}"
                                                 data-type="misc"
                                                 data-bs-toggle="modal"
@@ -210,7 +212,7 @@
                 </div>
             </div>
 
-            <div class="modal fade  edit-expense-modal" id="UpdateDrugModal" tabindex="-1" aria-labelledby="UpdateDrugModalLabel" aria-hidden="true">
+            <div class="modal fade  edit-modal" id="UpdateDrugModal" tabindex="-1" aria-labelledby="UpdateDrugModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -218,7 +220,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="UpdateDrugForm" method="post">
+                            <form id="UpdateDrugForm" method="post"  action="{{ route('expenses.update', $expense->id ?? '' ) }}">
                                 @csrf
 
                                 <input type="hidden" name="category_id" value="{{ $category->id  ?? '' }}">
@@ -260,7 +262,7 @@
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>آیا مطمئن هستید که می‌خواهید  <span class="text-danger"> {{$expense->name ?? '-'}}</span> <strong class="text-danger" id="delete-expense-name"></strong> را حذف کنید؟</p>
+                            <p>آیا مطمئن هستید که می‌خواهید  <span id="DeleteName" class="text-danger"></span> <strong class="text-danger" id="delete-expense-name"></strong> را حذف کنید؟</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>

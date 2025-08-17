@@ -87,13 +87,8 @@
 <!-- Plugins Js -->
 
 <script src="{{url('')}}/assets/js/app.min.js"></script>
-<script src="{{url('')}}/assets/js/chart.min.js"></script>
 <!-- Custom Js -->
 <script src="{{url('')}}/assets/js/admin.js"></script>
-<script src="{{url('')}}/assets/js/pages/index.js"></script>
-<script src="{{url('')}}/assets/js/pages/charts/jquery-knob.js"></script>
-<script src="{{url('')}}/assets/js/pages/sparkline/sparkline-data.js"></script>
-<script src="{{url('')}}/assets/js/pages/medias/carousel.js"></script>
 
 <script src="{{url('')}}/assets/js/offline-sync.js"></script>
 
