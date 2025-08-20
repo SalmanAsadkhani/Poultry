@@ -66,13 +66,14 @@
                                                         class="btn tblActnBtn btn-edit"
                                                         data-id="{{ $income->id }}"
                                                         data-type_modal="income"
+                                                        data-update_url="{{ route('income.update' ,$income->id)}}"
                                                         data-type="misc"
                                                         data-name="{{ $income->name }}"
                                                         data-quantity="{{ $income->quantity }}"
                                                         data-price="{{ $income->price }}"
                                                         data-description="{{ $income->description }}"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#UpdateMiscModal">
+                                                        data-bs-target="#UpdateMiscIncomeModal">
                                                         <i class="material-icons">mode_edit</i>
                                                     </button>
 
@@ -80,10 +81,11 @@
                                                         class="btn tblActnBtn btn-delete"
                                                         data-id="{{ $income->id }}"
                                                         data-name="{{ $income->name}}"
+                                                        data-delete_url="{{ route('income.destroy' ,$income->id)}}"
                                                         data-type_modal="income"
                                                         data-bs-toggle="modal"
                                                         data-type="misc"
-                                                        data-bs-target="#DeleteMiscModal">
+                                                        data-bs-target="#DeleteMiscIncomeModal">
                                                         <i class="material-icons">delete</i>
                                                     </button>
                                                 </td>
@@ -138,22 +140,24 @@
                                                     data-id="{{ $income->id }}"
                                                     data-type_modal="income"
                                                     data-type="misc"
+                                                    data-update_url="{{ route('income.update' ,$income->id)}}"
                                                     data-name="{{ $income->name }}"
                                                     data-quantity="{{ $income->quantity }}"
                                                     data-price="{{ $income->price }}"
                                                     data-description="{{ $income->description }}"
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#UpdateMiscModal">ویرایش
+                                                    data-bs-target="#UpdateMiscIncomeModal">ویرایش
                                                 </button>
 
                                                 <button
                                                     class="btn btn-sm btn-danger btn-delete"
                                                     data-id="{{ $income->id }}"
+                                                    data-delete_url="{{ route('income.destroy' ,$income->id)}}"
                                                     data-type_modal="income"
                                                     data-name="{{ $income->name}}"
                                                     data-type="miscIncome"
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#DeleteMiscModal">حذف
+                                                    data-bs-target="#DeleteMiscIncomeModal">حذف
                                                 </button>
 
                                             </div>
@@ -216,11 +220,11 @@
                 </div>
             </div>
 
-            <div class="modal fade  edit-income-modal" id="UpdateMiscModal" tabindex="-1" aria-labelledby="UpdateMiscModalLabel" aria-hidden="true">
+            <div class="modal fade " id="UpdateMiscIncomeModal" tabindex="-1" aria-labelledby="UpdateMiscIncomeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="UpdateMiscModalLabel">ویرایش </h5>
+                            <h5 class="modal-title" id="UpdateMiscIncomeModalLabel">ویرایش </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -258,11 +262,11 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="DeleteMiscModal" tabindex="-1" aria-labelledby="DeleteMiscModalLabel" aria-hidden="true">
+            <div class="modal fade" id="DeleteMiscIncomeModal" tabindex="-1" aria-labelledby="DeleteMiscIncomeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="DeleteMiscModalLabel">حذف رکورد</h5>
+                            <h5 class="modal-title" id="DeleteMiscIncomeModalLabel">حذف رکورد</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

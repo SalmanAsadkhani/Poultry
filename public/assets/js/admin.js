@@ -592,19 +592,65 @@ $('.box-refresh').on('click', function (br) {
 /*$(document).keydown(function (event) {
     if (event.keyCode == 123) { // Prevent F12
         return false;
-    } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Prevent Ctrl+Shift+I        
+    } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) { // Prevent Ctrl+Shift+I
         return false;
-    }else if (event.ctrlKey && event.keyCode == 'U'.charCodeAt(0)) { // Prevent Ctrl+U        
+    }else if (event.ctrlKey && event.keyCode == 'U'.charCodeAt(0)) { // Prevent Ctrl+U
         return false;
-    }else if (event.ctrlKey && event.shiftKey && event.keyCode == 'J'.charCodeAt(0)) { // Prevent Ctrl+Shift+J        
+    }else if (event.ctrlKey && event.shiftKey && event.keyCode == 'J'.charCodeAt(0)) { // Prevent Ctrl+Shift+J
         return false;
     }
 });
 
-$(document).on("contextmenu", function (e) {        
+$(document).on("contextmenu", function (e) {
     e.preventDefault();
 });
-  */  	
-    	
+  */
+
 //==========================================================================================================================
 
+const allModals = document.querySelectorAll('.modal')
+allModals.forEach(modal => {
+    modal.addEventListener('hidden.bs.modal', function () {
+
+        const forms = modal.querySelectorAll('form');
+        forms.forEach(form => {
+            form.reset();
+        });
+        const errorBoxes = modal.querySelectorAll('.validation-error');
+        const alerts = modal.querySelectorAll('.alert');
+        errorBoxes.forEach(box => {
+            box.style.display = 'none';
+            box.innerHTML = '';
+        });
+
+        alerts.forEach(box => {
+            box.style.display = 'none';
+            box.innerHTML = '';
+        });
+
+    });
+});
+
+const allEditModals = document.querySelectorAll('.edit-modal');
+allEditModals.forEach(modal => {
+    modal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const form = this.querySelector('form');
+
+        for (const key in button.dataset) {
+
+            let fieldName = key;
+
+            if (key === 'price') {
+                fieldName = 'unit_price';
+            }
+
+            const input = form.querySelector(`[name="${fieldName}"]`);
+
+            if (input) {
+                input.value = button.dataset[key];
+            }
+        }
+    });
+
+});

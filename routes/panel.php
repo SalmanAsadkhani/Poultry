@@ -30,7 +30,7 @@ Route::prefix('panel/expense')->group(function () {
     Route::post('invoice/{id}/update' , [\App\Http\Controllers\ExpenseController::class, 'invoice_update'])->name('invoice.expense.update')->middleware('auth');
     Route::post('invoice/{id}/destroy' , [\App\Http\Controllers\ExpenseController::class, 'invoice_destroy'])->name('invoice.expense.destroy')->middleware('auth');
     Route::get('/{type}/{category}/show', [ExpenseController::class, 'showCategory'])->name('expense.category.show')->middleware('auth');
-    Route::post('store' , [\App\Http\Controllers\ExpenseController::class, 'store'])->name('expenses.store')->middleware('auth');
+    Route::post('/store' , [\App\Http\Controllers\ExpenseController::class, 'store'])->name('expenses.store')->middleware('auth');
     Route::post('{id}/update' , [\App\Http\Controllers\ExpenseController::class, 'update'])->name('expenses.update')->middleware('auth');
     Route::post('{id}/destroy' , [\App\Http\Controllers\ExpenseController::class, 'destroy'])->name('expenses.destroy')->middleware('auth');
 });

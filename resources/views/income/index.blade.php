@@ -55,6 +55,7 @@
                                                         data-bs-target="#UpdateInvoiceModal"
                                                         data-update_url="{{ route('Invoice.income.update', $category->id) }}"
                                                         data-name="{{ $category->name }}"
+                                                        data-category_id="{{$category->id}}"
                                                         data-breeding_cycle_id="{{ $cycle->id }}"
                                                         data-category_type="chicken">
                                                         <i class="material-icons">mode_edit</i>
@@ -68,7 +69,8 @@
                                                             data-category_type="chicken"
                                                             data-bs-target="#DeleteInvoiceModal"
                                                             data-delete_url="{{ route('Invoice.income.destroy', $category->id) }}"
-                                                            data-name="{{ $category->name }}">
+                                                            data-name="{{ $category->name }}"
+                                                            data-category_id="{{$category->id}}">
                                                             <i class="material-icons">delete</i>
                                                         </button>
                                                     @endif
@@ -91,6 +93,7 @@
                                                         data-bs-target="#UpdateInvoiceModal"
                                                         data-update_url="{{ route('Invoice.income.update', $category->id) }}"
                                                         data-name="{{ $category->name }}"
+                                                        data-category_id="{{$category->id}}"
                                                         data-breeding_cycle_id="{{ $cycle->id }}"
                                                         data-category_type="misc">
                                                         <i class="material-icons">mode_edit</i>
@@ -104,7 +107,8 @@
                                                             data-type_modal='income'
                                                             data-bs-target="#DeleteInvoiceModal"
                                                             data-delete_url="{{ route('Invoice.income.destroy', $category->id) }}"
-                                                            data-name="{{ $category->name }}">
+                                                            data-name="{{ $category->name }}"
+                                                            data-category_id="{{$category->id}}">
                                                             <i class="material-icons">delete</i>
                                                         </button>
                                                     @endif
@@ -187,9 +191,13 @@
                 <form id="UpdateInvoiceForm" method="post" novalidate="novalidate">
                     <div class="modal-body">
                         @csrf
+
+                        <input type="hidden" name="breeding_cycle_id" value="breeding_cycle_id">
+                        <input type="hidden" name="category_type" value="category_type">
+
                         <div class="mb-3">
                             <label for="cycle" class="form-label">انتخاب دوره:</label>
-                            <select name="breeding_cycle_id" id="cycle" style="display: block">
+                            <select   disabled  name="breeding_cycle_id" id="cycle" style="display: block">
                                 @forelse($cycles as $cycle)
                                     <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
                                 @empty
@@ -200,7 +208,7 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label"> دسته‌بندی:</label>
-                            <select name="income_category" id="Income_category" style="display: block">
+                            <select disabled name="income_category" id="Income_category" style="display: block">
                                 <option value='chicken'>فروش مرغ</option>
                                 <option value='misc' >متفرقه</option>
                             </select>
@@ -236,7 +244,7 @@
                 <div class="modal-footer">
                     <form id="delete-invoice-form" method="POST">
                         @csrf
-                        <input type="hidden" name="category_type" value="category_type">
+                        <input type="hidden" name="category_type" value="">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
                         <button type="submit" class="btn btn-danger">بله، حذف کن</button>
                     </form>

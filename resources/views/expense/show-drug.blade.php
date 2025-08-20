@@ -72,6 +72,7 @@
                                                 data-quantity="{{ $expense->quantity }}"
                                                 data-price="{{ $expense->price }}"
                                                 data-description="{{ $expense->description }}"
+                                                data-update_url="{{ route('expenses.update', $expense->id)}}"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#UpdateDrugModal">
                                                 <i class="material-icons">mode_edit</i>
@@ -81,8 +82,9 @@
                                                 class="btn tblActnBtn btn-delete"
                                                 data-id="{{ $expense->id }}"
                                                 data-type_modal="expense"
+                                                data-delete_url="{{ route('expenses.destroy', $expense->id)}}"
                                                 data-name="{{ $expense->name}}"
-                                                data-type="misc"
+                                                data-type="drug"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#DeleteDrugModal">
                                                 <i class="material-icons">delete</i>
@@ -104,7 +106,7 @@
                                     <div class="card mb-3" x-data="{ open: false }">
 
                                         <div class="card-header d-flex justify-content-between align-items-center" @click="open = !open" style="cursor: pointer;">
-                                            <strong><span class="text-danger"> نام دارو :</span> {{ $expense->name }}</strong> - <strong>{{ sep($expense->price)}} <span class="text-danger">تومان     </span> </strong>
+                                            <strong><span class="text-danger"> نام دارو :</span> {{ $expense->name }}</strong> - <strong>{{ sep($expense->price * $expense->quantity)}} <span class="text-danger">تومان     </span> </strong>
                                             <span x-show="!open">▼</span>
                                             <span x-show="open">▲</span>
                                         </div>
@@ -138,6 +140,8 @@
                                                      class="btn btn-sm btn-primary btn-edit"
                                                      data-id="{{ $expense->id }}"
                                                      data-type="drug"
+                                                     data-type_modal="expense"
+                                                     data-update_url="{{ route('expenses.update', $expense->id)}}"
                                                      data-name="{{ $expense->name }}"
                                                      data-quantity="{{ $expense->quantity }}"
                                                      data-price="{{ $expense->price }}"
@@ -150,7 +154,9 @@
                                                      class="btn btn-sm btn-danger btn-delete"
                                                      data-id="{{ $expense->id }}"
                                                      data-name="{{ $expense->name}}"
-                                                     data-type="misc"
+                                                     data-type_modal="expense"
+                                                     data-delete_url="{{ route('expenses.destroy' , $expense->id)}}"
+                                                     data-type="drug"
                                                      data-bs-toggle="modal"
                                                      data-bs-target="#DeleteDrugModal">حذف
                                                  </button>

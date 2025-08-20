@@ -23,7 +23,7 @@ class UpdateInvoiceRequest extends FormRequest
     {
         return [
             'breeding_cycle_id' => 'required|exists:breeding_cycles,id',
-            'expense_category'  => 'required|string|in:feed,drug,misc',
+            'category_type'  => 'required|string|in:feed,drug,misc',
             'name'       => ['required', 'string', 'max:255' , 'min:3'],
         ];
     }

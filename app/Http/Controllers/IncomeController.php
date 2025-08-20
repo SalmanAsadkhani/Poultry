@@ -55,10 +55,10 @@ class IncomeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'breeding_cycle_id' => 'required|exists:breeding_cycles,id',
-            'income_category' => 'required|in:chicken,misc',
+            'category_type' => 'required|in:chicken,misc',
         ]);
 
-        $model = match ($request['income_category']) {
+        $model = match ($request['category_type']) {
             'chicken' => ChickenSalesCategory::class,
             'misc' => MiscellaneousIncomeCategory::class,
         };
@@ -83,7 +83,7 @@ class IncomeController extends Controller
             'category_type' => 'required|in:chicken,misc',
         ]);
 
-        $model = match ($request['income_category']) {
+        $model = match ($request['category_type']) {
             'chicken' => ChickenSalesCategory::class,
             'misc' => MiscellaneousIncomeCategory::class,
         };
@@ -103,7 +103,7 @@ class IncomeController extends Controller
     {
         [$categoryModel, $relation, $viewName, $titlePrefix] = match ($type) {
             'chicken' => [ChickenSalesCategory::class,'chickens', 'income.show-chicken', 'صورتحساب درآمدهای فروش مرغ'],
-            'misc' => [MiscellaneousIncomeCategory::class, 'miscellaneous_income', 'income.show-misc', 'صورتحساب درآمدهای متفرقه'],
+            'misc' => [MiscellaneousIncomeCategory::class, 'miscellaneous_incomes', 'income.show-misc', 'صورتحساب درآمدهای متفرقه'],
 
         };
 
@@ -200,9 +200,7 @@ class IncomeController extends Controller
 
     public function destroy(Request $request, $id) : JsonResponse
     {
-
-        $request->validate(['type' => 'required|string|in:chicken,misc']);
-
+       $request->validate(['type' => 'required|string|in:chicken,misc']);
         $model = match ($request->type) {
             'chicken' => ChickenSales::class,
             'misc' => MiscellaneousIncome::class,

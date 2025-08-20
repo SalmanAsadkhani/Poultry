@@ -233,14 +233,15 @@
                 </div>
 
                 <form id="UpdateInvoiceForm" method="post" novalidate="novalidate">
-                    <input >
                     <div class="modal-body">
                         @csrf
-                        <input type="hidden" name="id" value="category_id">
+
+                        <input type="hidden" name="breeding_cycle_id" value="breeding_cycle_id">
+                        <input type="hidden" name="category_type" value="category_type">
 
                         <div class="mb-3">
                             <label for="cycle" class="form-label">انتخاب دوره:</label>
-                            <select name="breeding_cycle_id" id="cycle" style="display: block">
+                            <select disabled name="breeding_cycle_id" id="cycle" style="display: block">
                                 @forelse($cycles as $cycle)
                                     <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
                                 @empty
@@ -251,7 +252,7 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label"> دسته‌بندی:</label>
-                            <select name="expense_category" id="Expense_category" style="display: block">
+                            <select disabled name="expense_category" id="Expense_category" style="display: block">
                                 <option value="feed">دان</option>
                                 <option value="drug">داروخانه</option>
                                 <option value="misc">متفرقه</option>
@@ -289,7 +290,6 @@
                     <form id="delete-invoice-form" method="POST">
                         @csrf
                         <input type="hidden" name="category_type" value="category_type">
-                        <input type="hidden" name="id" value="category_id">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
                         <button type="submit" class="btn btn-danger">بله، حذف کن</button>
                     </form>

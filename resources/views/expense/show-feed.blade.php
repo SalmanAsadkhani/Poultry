@@ -75,6 +75,7 @@
                                                         data-bag_count="{{ $expense->bag_count }}"
                                                         data-price="{{ $expense->price }}"
                                                         data-description="{{ $expense->description }}"
+                                                        data-update_url="{{ route('expenses.update' , $expense->id) }}"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#UpdateFeedModal">
                                                         <i class="material-icons">mode_edit</i>
@@ -84,6 +85,7 @@
                                                         class="btn tblActnBtn btn-delete"
                                                         data-id="{{ $expense->id }}"
                                                         data-type_modal="expense"
+                                                        data-delete_url="{{ route('expenses.destroy' ,  $expense->id)}}"
                                                         data-name="{{ $expense->name}}"
                                                         data-type="feed"
                                                         data-bs-toggle="modal"
@@ -144,6 +146,8 @@
                                                     class="btn btn-sm btn-primary btn-edit"
                                                     data-id="{{ $expense->id }}"
                                                     data-type="feed"
+                                                    data-type_modal="expense"
+                                                    data-update_url="{{ route('expenses.update' , $expense->id) }}"
                                                     data-name="{{ $expense->name }}"
                                                     data-quantity="{{ $expense->quantity }}"
                                                     data-bag_count="{{ $expense->bag_count }}"
@@ -157,7 +161,9 @@
                                                     class="btn btn-sm btn-danger btn-delete"
                                                     data-id="{{ $expense->id }}"
                                                     data-name="{{ $expense->name}}"
-                                                    data-type="misc"
+                                                    data-type_modal="expense"
+                                                    data-delete_url="{{ route('expenses.destroy' ,  $expense->id)}}"
+                                                    data-type="feed"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#DeleteFeedModal">حذف
                                                 </button>

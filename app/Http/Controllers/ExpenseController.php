@@ -58,7 +58,7 @@ class ExpenseController extends Controller
 
     public function invoice_update(UpdateInvoiceRequest $request ,$id)
     {
-        $model = match ($request['expense_category']) {
+        $model = match ($request['category_type']) {
             'feed' => FeedCategory::class,
             'drug' => DrugCategory::class,
             'misc' => MiscellaneousCategory::class,
@@ -205,7 +205,6 @@ class ExpenseController extends Controller
 
     public function destroy(Request $request, $id) : JsonResponse
     {
-
         $request->validate(['type' => 'required|string|in:feed,drug,misc']);
 
         $model = match ($request->type) {
