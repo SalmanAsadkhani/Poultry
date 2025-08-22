@@ -12,6 +12,7 @@ class Feed extends Model
         'feed_category_id',
         'name',
         'quantity',
+        'remaining_bags',
         'bag_count',
         'price',
         'description',

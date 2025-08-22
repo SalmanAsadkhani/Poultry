@@ -632,6 +632,7 @@ allModals.forEach(modal => {
 });
 
 const allEditModals = document.querySelectorAll('.edit-modal');
+
 allEditModals.forEach(modal => {
     modal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;

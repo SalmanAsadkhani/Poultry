@@ -35,7 +35,6 @@ Route::prefix('panel/expense')->group(function () {
     Route::post('{id}/destroy' , [\App\Http\Controllers\ExpenseController::class, 'destroy'])->name('expenses.destroy')->middleware('auth');
 });
 
-
 Route::prefix('panel/income')->group(function () {
     Route::get('' , [\App\Http\Controllers\IncomeController::class, 'index'])->name('income.index')->middleware('auth');
     Route::post('invoice/store' , [\App\Http\Controllers\IncomeController::class, 'invoice'])->name('Invoice.income.store')->middleware('auth');

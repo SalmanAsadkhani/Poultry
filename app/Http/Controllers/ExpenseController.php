@@ -161,6 +161,7 @@ class ExpenseController extends Controller
 
         if ($request->type == 'feed') {
             $data['bag_count'] = $request->bag_count;
+            $data['remaining_bags'] = $request->bag_count;
         }
 
 
@@ -193,6 +194,7 @@ class ExpenseController extends Controller
 
         if ($request->type == 'feed') {
             $data['bag_count'] = $request->bag_count;
+            $data['remaining_bags'] = $request->bag_count;
         }
 
         $expense->update($data);

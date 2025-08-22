@@ -49,17 +49,19 @@ class BreedingCyclesController extends Controller
     public function show($id)
     {
         $cycle = BreedingCycle::with([
-            'dailyReports.feedConsumptions',
-            'feeds'
+            'dailyReports' => function ($query) {
+                $query->with('feedConsumptions')->orderBy('created_at', 'asc');
+            },
+            'feeds' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            }
         ])
             ->withSum('dailyReports as total_mortality', 'mortality_count')
             ->findOrFail($id);
 
         $feedAnalytics = $cycle->getFeedConsumptionAnalytics();
 
-
         $chickAge = Verta::parse($cycle->start_date)->diffDays(Verta::now()) + 1;
-
 
         return view('breeding.show', [
             'cycle' => $cycle,

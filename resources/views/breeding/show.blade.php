@@ -150,6 +150,12 @@
     .highlight-row {
     animation: highlight-fade 2s ease-out;
     }
+    .btn-extra-sm {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.75rem;
+    border-radius: 0.2rem;
+    }
+
 @endsection
 
 @section('main')
@@ -250,7 +256,41 @@
                                                     <td><input name="actions[{{ $report->id }}]" value="{{ $report->actions_taken }}" ></td>
 
                                                     <td>
-                                                        @include('partials.feed_consumption_form' , ['report' => $report])
+                                                        <div class="feed-consumption-wrapper">
+                                                            @forelse($report->feedConsumptions as $consumption)
+                                                                <div class="row feed-consumption-row mb-2">
+                                                                    <input type="hidden" name="feeds[{{ $report->id }}][{{ $loop->index }}][id]" value="{{ $consumption->id }}">
+                                                                    <div class="col">
+                                                                        <select name="feeds[{{ $report->id }}][{{ $loop->index }}][type]" class="form-select form-select-sm" style="display: block">
+                                                                            @foreach(['استارتر', 'پیش دان', 'میان دان','میان دان دو', 'پس دان' , 'پس دان دو'] as $type)
+                                                                                <option value="{{ $type }}" @if($consumption->feed_type == $type) selected @endif>{{ $type }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][{{ $loop->index }}][bags]" class="form-control form-control-sm validate-required" placeholder="تعداد" value="{{ $consumption->bag_count }}" min="1"  data-error-message="تعداد کیسه باید حداقل ۱ باشد.">
+                                                                    </div>
+                                                                    <div class="col-auto">
+                                                                        <button type="button" class="btn btn-danger remove-feed-row btn-extra-sm">حذف</button>
+                                                                    </div>
+                                                                </div>
+                                                            @empty
+                                                                <div class="row feed-consumption-row mb-2">
+                                                                    <div class="col">
+                                                                        <select name="feeds[{{ $report->id }}][0][type]" class="form-select form-select-sm" style="display: block">
+                                                                            @foreach(['استارتر', 'پیش دان', 'میان دان','میان دان دو', 'پس دان' , 'پس دان دو'] as $type)
+                                                                                <option value="{{ $type }}">{{ $type }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][0][bags]" class="form-control form-control-sm validate-required" placeholder="تعداد"  data-error-message="تعداد کیسه باید حداقل ۱ باشد.">
+                                                                    </div>
+                                                                    <div class="col-auto"></div>
+                                                                </div>
+                                                            @endforelse
+                                                        </div>
+                                                        <button type="button" class="btn btn-outline-success mt-2 add-feed-row btn-extra-sm" data-report-id="{{ $report->id }}">+ افزودن</button>
                                                     </td>
 
                                                     <td>{{ sep($report->feed_daily_used) }} <small>(کیلوگرم)</small></td>
@@ -297,7 +337,41 @@
                                                     <div class="form-group">
                                                         <label class="bold text-danger">دان مصرفی:</label>
                                                         <div class="mt-2">
-                                                            @include('partials.feed_consumption_form', ['report' => $report])
+                                                            <div class="feed-consumption-wrapper">
+                                                                @forelse($report->feedConsumptions as $consumption)
+                                                                    <div class="row feed-consumption-row mb-2">
+                                                                        <input type="hidden" name="feeds[{{ $report->id }}][{{ $loop->index }}][id]" value="{{ $consumption->id }}">
+                                                                        <div class="col">
+                                                                            <select name="feeds[{{ $report->id }}][{{ $loop->index }}][type]" class="form-select form-select-sm" style="display: block">
+                                                                                @foreach(['استارتر', 'پیش دان', 'میان دان','میان دان دو', 'پس دان' , 'پس دان دو'] as $type)
+                                                                                    <option value="{{ $type }}" @if($consumption->feed_type == $type) selected @endif>{{ $type }}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][{{ $loop->index }}][bags]" class="form-control form-control-sm validate-required" placeholder="تعداد" value="{{ $consumption->bag_count }}" min="1"  data-error-message="تعداد کیسه باید حداقل ۱ باشد.">
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            <button type="button" class="btn btn-danger remove-feed-row btn-extra-sm">حذف</button>
+                                                                        </div>
+                                                                    </div>
+                                                                @empty
+                                                                    <div class="row feed-consumption-row mb-2">
+                                                                        <div class="col">
+                                                                            <select name="feeds[{{ $report->id }}][0][type]" class="form-select form-select-sm" style="display: block">
+                                                                                @foreach(['استارتر', 'پیش دان', 'میان دان','میان دان دو', 'پس دان' , 'پس دان دو'] as $type)
+                                                                                    <option value="{{ $type }}">{{ $type }}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <input type="tel" dir="rtl" name="feeds[{{ $report->id }}][0][bags]" class="form-control form-control-sm validate-required" placeholder="تعداد"  data-error-message="تعداد کیسه باید حداقل ۱ باشد.">
+                                                                        </div>
+                                                                        <div class="col-auto"></div>
+                                                                    </div>
+                                                                @endforelse
+                                                            </div>
+                                                            <button type="button" class="btn btn-outline-success mt-2 add-feed-row btn-extra-sm" data-report-id="{{ $report->id }}">+ افزودن</button>
                                                         </div>
                                                     </div>
 
