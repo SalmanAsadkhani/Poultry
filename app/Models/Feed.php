@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Feed extends Model
 {
+
+    protected $touches = ['breedingCycle'];
+
     protected $fillable = [
         'breeding_cycle_id',
         'feed_category_id',

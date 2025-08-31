@@ -174,6 +174,15 @@
                         </div>
                     </div>
 
+                    <div class="col-lg-4 col-md-3">
+                        <div class="card shadow-sm border-0 h-100 text-center">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-4"> تعداد جوجه باقی مانده</h6>
+                                <h4 Class="fw-bold text-dark">{{ sep($cycle->chicken_count - $cycle->total_mortality)}} قطعه </h4>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="col-lg-4 col-md-3">
                         <div class="card shadow-sm border-0 h-100 text-center">
@@ -194,6 +203,37 @@
                         </div>
                     </div>
 
+                    @if(!empty($inventory_left))
+                        <div class="col-lg-4 col-md-3">
+                            <div class="card shadow-sm border-0 h-100 text-center">
+                                <div class="card-body">
+                                    <h6 class="text-muted mb-4">تعداد کیسه باقی مانده درانبار</h6>
+
+                                    @php
+                                        $itemsWithStock = collect($inventory_left)->filter(function ($item) {
+                                            return $item['remaining'] > 0;
+                                        });
+                                    @endphp
+
+                                    @if ($itemsWithStock->isNotEmpty())
+
+                                        @foreach($itemsWithStock as $bag_count)
+                                            <div>
+                                                <h5 class="fw-bold text-info mb-2">{{ $bag_count['name'] }}:</h5>
+                                                <h6 class="fw-bold text-secondary mb-4">{{ sep($bag_count['remaining']) }} <small>(کیسه)</small></h6>
+                                            </div>
+                                        @endforeach
+
+                                    @else
+
+                                        <h5 class="fw-bold text-info mb-2">خالی</h5>
+                                    @endif
+
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     @if(!empty($feedSummary))
                         <div class="col-lg-4 col-md-3">
                             <div class="card shadow-sm border-0 h-100 text-center">
@@ -211,7 +251,6 @@
                             </div>
                         </div>
                     @endif
-
 
                 </div>
             </div>
@@ -374,7 +413,6 @@
                                                             <button type="button" class="btn btn-outline-success mt-2 add-feed-row btn-extra-sm" data-report-id="{{ $report->id }}">+ افزودن</button>
                                                         </div>
                                                     </div>
-
 
                                                     <div class="bold text-danger mb-5"> مقدار دان مصرف شده
                                                         <span class="text-dark">{{ $report->feed_daily_used }} <small>(کیلوگرم)</small></span>
